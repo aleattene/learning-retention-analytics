@@ -11,8 +11,39 @@
 --
 -- This query sizes each segment and computes their dropout rates to
 -- estimate the impact of targeted interventions.
+--
+-- Uses LEFT JOINs with pre-aggregated subqueries instead of correlated
+-- EXISTS for compatibility and performance.
 
-WITH student_segments AS (
+WITH early_activity AS (
+    -- Pre-aggregate: did the student have any VLE activity in days 0-14?
+    SELECT
+        id_student, code_module, code_presentation,
+        COUNT(*) AS n_clicks_0_14
+    FROM studentVle
+    WHERE date BETWEEN 0 AND 14
+    GROUP BY id_student, code_module, code_presentation
+),
+late_activity AS (
+    -- Pre-aggregate: did the student have any VLE activity in days 15-28?
+    SELECT
+        id_student, code_module, code_presentation,
+        COUNT(*) AS n_clicks_15_28
+    FROM studentVle
+    WHERE date BETWEEN 15 AND 28
+    GROUP BY id_student, code_module, code_presentation
+),
+early_assessments AS (
+    -- Pre-aggregate: did the student submit any assessment due in first 28 days?
+    SELECT DISTINCT
+        sa.id_student,
+        a.code_module,
+        a.code_presentation
+    FROM studentAssessment sa
+    JOIN assessments a ON sa.id_assessment = a.id_assessment
+    WHERE a.date <= 28
+),
+student_segments AS (
     SELECT
         se.id_student,
         se.code_module,
@@ -34,16 +65,7 @@ WITH student_segments AS (
         -- Didn't submit any assessment due in the first 28 days
         -- Missing the first deadline is a strong dropout predictor
         CASE
-            WHEN NOT EXISTS (
-                SELECT 1
-                FROM studentAssessment sa
-                JOIN assessments a ON sa.id_assessment = a.id_assessment
-                WHERE sa.id_student = se.id_student
-                  AND a.code_module = se.code_module
-                  AND a.code_presentation = se.code_presentation
-                  AND a.date <= 28
-            )
-            THEN 1
+            WHEN ea.id_student IS NULL THEN 1
             ELSE 0
         END AS is_non_submitter,
 
@@ -51,29 +73,36 @@ WITH student_segments AS (
         -- Had some activity in days 0-14 but zero activity in days 15-28
         -- These students started but lost momentum
         CASE
-            WHEN EXISTS (
-                SELECT 1 FROM studentVle sv2
-                WHERE sv2.id_student = se.id_student
-                  AND sv2.code_module = se.code_module
-                  AND sv2.code_presentation = se.code_presentation
-                  AND sv2.date BETWEEN 0 AND 14
-            )
-            AND NOT EXISTS (
-                SELECT 1 FROM studentVle sv3
-                WHERE sv3.id_student = se.id_student
-                  AND sv3.code_module = se.code_module
-                  AND sv3.code_presentation = se.code_presentation
-                  AND sv3.date BETWEEN 15 AND 28
-            )
+            WHEN early_act.n_clicks_0_14 IS NOT NULL
+                 AND late_act.n_clicks_15_28 IS NULL
             THEN 1
             ELSE 0
         END AS is_early_disengager
 
     FROM v_student_enriched se
+
     LEFT JOIN v_engagement_early ee
         ON se.id_student = ee.id_student
         AND se.code_module = ee.code_module
         AND se.code_presentation = ee.code_presentation
+
+    -- Join with pre-aggregated early assessment submissions
+    LEFT JOIN early_assessments ea
+        ON se.id_student = ea.id_student
+        AND se.code_module = ea.code_module
+        AND se.code_presentation = ea.code_presentation
+
+    -- Join with pre-aggregated VLE activity for days 0-14
+    LEFT JOIN early_activity early_act
+        ON se.id_student = early_act.id_student
+        AND se.code_module = early_act.code_module
+        AND se.code_presentation = early_act.code_presentation
+
+    -- Join with pre-aggregated VLE activity for days 15-28
+    LEFT JOIN late_activity late_act
+        ON se.id_student = late_act.id_student
+        AND se.code_module = late_act.code_module
+        AND se.code_presentation = late_act.code_presentation
 )
 SELECT
     -- Segment sizing and dropout rates
@@ -95,4 +124,5 @@ SELECT
     SUM(is_early_disengager) AS n_early_disengager,
     ROUND(100.0 * SUM(is_early_disengager) / COUNT(*), 1) AS pct_early_disengager,
     ROUND(100.0 * SUM(CASE WHEN is_early_disengager = 1 AND completed = 0 THEN 1 ELSE 0 END)
-        / NULLIF(SUM(is_early_disengager), 0), 1) AS disengager_non_completion_rate_pct;
+        / NULLIF(SUM(is_early_disengager), 0), 1) AS disengager_non_completion_rate_pct
+FROM student_segments;
