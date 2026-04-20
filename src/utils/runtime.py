@@ -48,6 +48,9 @@ def log_environment() -> None:
     for lib_name in ["duckdb", "pandas", "numpy", "scipy"]:
         try:
             lib = __import__(lib_name)
-            logger.info("%s %s", lib_name, lib.__version__)
+            # Not all modules expose __version__ — guard to avoid
+            # AttributeError breaking the entire startup log
+            version: str = getattr(lib, "__version__", "unknown")
+            logger.info("%s %s", lib_name, version)
         except ImportError:
             logger.warning("%s not installed", lib_name)
