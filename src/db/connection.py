@@ -72,7 +72,8 @@ def execute_query(
     Parameters
     ----------
     sql : str
-        SQL query string. Must be ANSI-compliant (no DuckDB-specific syntax).
+        SQL query string. Must be DuckDB + BigQuery compatible
+        (standard SQL with QUALIFY, PERCENTILE_CONT, window functions).
     conn : DuckDBPyConnection or None
         Database connection. If None, opens a default read-only connection.
         Pass an explicit connection when running inside a pipeline step

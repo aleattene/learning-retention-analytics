@@ -16,19 +16,21 @@
 -- EXISTS for compatibility and performance.
 
 WITH early_activity AS (
-    -- Pre-aggregate: did the student have any VLE activity in days 0-14?
+    -- Pre-aggregate: total VLE clicks in days 0-14
+    -- Uses SUM(sum_click) for actual click volume, not COUNT(*) which
+    -- would only count rows (one row = one student-resource-day pair)
     SELECT
         id_student, code_module, code_presentation,
-        COUNT(*) AS n_clicks_0_14
+        SUM(sum_click) AS total_clicks_0_14
     FROM studentVle
     WHERE date BETWEEN 0 AND 14
     GROUP BY id_student, code_module, code_presentation
 ),
 late_activity AS (
-    -- Pre-aggregate: did the student have any VLE activity in days 15-28?
+    -- Pre-aggregate: total VLE clicks in days 15-28
     SELECT
         id_student, code_module, code_presentation,
-        COUNT(*) AS n_clicks_15_28
+        SUM(sum_click) AS total_clicks_15_28
     FROM studentVle
     WHERE date BETWEEN 15 AND 28
     GROUP BY id_student, code_module, code_presentation
@@ -73,8 +75,8 @@ student_segments AS (
         -- Had some activity in days 0-14 but zero activity in days 15-28
         -- These students started but lost momentum
         CASE
-            WHEN early_act.n_clicks_0_14 IS NOT NULL
-                 AND late_act.n_clicks_15_28 IS NULL
+            WHEN early_act.total_clicks_0_14 IS NOT NULL
+                 AND late_act.total_clicks_15_28 IS NULL
             THEN 1
             ELSE 0
         END AS is_early_disengager

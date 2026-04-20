@@ -30,12 +30,14 @@ SELECT
     ROUND(AVG(cp.n_activity_types), 1) AS avg_n_activity_types,
 
     -- === Engagement intensity (from clickstream) ===
-    -- How much students engage with the VLE on average
+    -- Average VLE clicks per student-day from the daily engagement view
+    -- Each row in v_engagement_daily is one student-day, so AVG gives
+    -- the typical daily engagement intensity, not a per-student total
     (
         SELECT ROUND(AVG(ed.total_clicks), 1)
         FROM v_engagement_daily ed
         WHERE ed.code_module = cp.code_module
-    ) AS avg_daily_clicks_per_student,
+    ) AS avg_clicks_per_student_day,
 
     -- Median engagement in the first 28 days (from early engagement view)
     -- Median is more robust than mean for skewed click distributions

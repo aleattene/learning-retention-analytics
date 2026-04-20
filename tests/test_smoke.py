@@ -5,6 +5,7 @@ is broken (missing dependency, bad config, import error).
 """
 
 import duckdb
+import pytest
 
 
 class TestImports:
@@ -80,9 +81,14 @@ class TestConfig:
         assert "studentVle" in OULAD_TABLES
         assert "courses" in OULAD_TABLES
 
-    def test_push_to_sheets_default_false(self) -> None:
+    def test_push_to_sheets_default_false(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """PUSH_TO_SHEETS should default to False when env var is not set."""
-        # Note: this test may fail if PUSH_TO_SHEETS=true is set in the environment
-        from src.config import PUSH_TO_SHEETS
+        import importlib
 
-        assert isinstance(PUSH_TO_SHEETS, bool)
+        import src.config
+
+        # Ensure the env var is absent, then reload config to pick up the default
+        monkeypatch.delenv("PUSH_TO_SHEETS", raising=False)
+        importlib.reload(src.config)
+
+        assert src.config.PUSH_TO_SHEETS is False
