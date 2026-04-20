@@ -29,7 +29,10 @@ SELECT
 
     -- Average clicks per active day (intensity of engagement when present)
     -- High avg with low active_days may indicate surface-level cramming
-    AVG(sv.sum_click) AS avg_clicks_per_active_day,
+    -- AVG(sv.sum_click) would average per row (student × resource × day),
+    -- not per distinct active day. SUM / COUNT(DISTINCT date) gives the
+    -- true daily intensity regardless of how many resources were accessed.
+    SUM(sv.sum_click) / NULLIF(COUNT(DISTINCT sv.date), 0) AS avg_clicks_per_active_day,
 
     -- Last day of activity within the window
     -- A student whose last active day is day 5 (out of 28) is likely already disengaged
