@@ -9,6 +9,29 @@
 -- to build a comprehensive course profile.
 
 CREATE OR REPLACE VIEW v_course_profile AS
+
+-- Pre-aggregate assessment counts per course-presentation to avoid
+-- correlated subqueries (better performance, especially on BigQuery)
+WITH assessment_stats AS (
+    SELECT
+        code_module,
+        code_presentation,
+        COUNT(*) AS n_assessments
+    FROM assessments
+    GROUP BY code_module, code_presentation
+),
+
+-- Pre-aggregate VLE resource counts per course-presentation
+vle_stats AS (
+    SELECT
+        code_module,
+        code_presentation,
+        COUNT(DISTINCT id_site)      AS n_vle_resources,
+        COUNT(DISTINCT activity_type) AS n_activity_types
+    FROM vle
+    GROUP BY code_module, code_presentation
+)
+
 SELECT
     c.code_module,
     c.code_presentation,
@@ -33,20 +56,13 @@ SELECT
     -- More frequent assessments may improve retention (regular feedback loop)
     -- or worsen it (overwhelming students)
 
-    (SELECT COUNT(*)
-     FROM assessments a
-     WHERE a.code_module = c.code_module
-       AND a.code_presentation = c.code_presentation
-    ) AS n_assessments,
+    COALESCE(ast.n_assessments, 0) AS n_assessments,
 
     -- Assessment density: assessments per 30 days of course
     -- Normalizes for course length so a 240-day course with 12 assessments
     -- is comparable to a 120-day course with 6
     ROUND(
-        30.0 * (SELECT COUNT(*)
-                FROM assessments a
-                WHERE a.code_module = c.code_module
-                  AND a.code_presentation = c.code_presentation)
+        30.0 * COALESCE(ast.n_assessments, 0)
         / c.module_presentation_length,
         2
     ) AS assessments_per_30_days,
@@ -54,23 +70,23 @@ SELECT
     -- === VLE resource diversity ===
     -- Courses with more diverse resource types may engage students differently
 
-    (SELECT COUNT(DISTINCT v.id_site)
-     FROM vle v
-     WHERE v.code_module = c.code_module
-       AND v.code_presentation = c.code_presentation
-    ) AS n_vle_resources,
-
-    (SELECT COUNT(DISTINCT v.activity_type)
-     FROM vle v
-     WHERE v.code_module = c.code_module
-       AND v.code_presentation = c.code_presentation
-    ) AS n_activity_types
+    COALESCE(vs.n_vle_resources, 0) AS n_vle_resources,
+    COALESCE(vs.n_activity_types, 0) AS n_activity_types
 
 FROM courses c
 LEFT JOIN v_student_enriched se
     ON c.code_module = se.code_module
     AND c.code_presentation = se.code_presentation
+LEFT JOIN assessment_stats ast
+    ON c.code_module = ast.code_module
+    AND c.code_presentation = ast.code_presentation
+LEFT JOIN vle_stats vs
+    ON c.code_module = vs.code_module
+    AND c.code_presentation = vs.code_presentation
 GROUP BY
     c.code_module,
     c.code_presentation,
-    c.module_presentation_length;
+    c.module_presentation_length,
+    ast.n_assessments,
+    vs.n_vle_resources,
+    vs.n_activity_types;
