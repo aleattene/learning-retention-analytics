@@ -21,11 +21,13 @@ SELECT
 
     -- Number and rate of students who completed (Pass + Distinction)
     SUM(se.completed) AS n_completed,
-    ROUND(100.0 * SUM(se.completed) / COUNT(DISTINCT se.id_student), 1) AS completion_rate_pct,
+    -- NULLIF guards against division-by-zero when a LEFT JOIN produces
+    -- a course-presentation with no matching students in v_student_enriched
+    ROUND(100.0 * SUM(se.completed) / NULLIF(COUNT(DISTINCT se.id_student), 0), 1) AS completion_rate_pct,
 
     -- Number and rate of explicit withdrawals
     SUM(se.withdrew_explicit) AS n_withdrew,
-    ROUND(100.0 * SUM(se.withdrew_explicit) / COUNT(DISTINCT se.id_student), 1) AS withdrawal_rate_pct,
+    ROUND(100.0 * SUM(se.withdrew_explicit) / NULLIF(COUNT(DISTINCT se.id_student), 0), 1) AS withdrawal_rate_pct,
 
     -- === Assessment design metrics ===
     -- More frequent assessments may improve retention (regular feedback loop)
