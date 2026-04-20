@@ -71,6 +71,16 @@ def independent_t_test(
     g1 = g1[~np.isnan(g1)]
     g2 = g2[~np.isnan(g2)]
 
+    # Guard: each group needs at least 2 values for a meaningful t-test.
+    # With fewer than 2 values, variance (ddof=1) becomes NaN and the
+    # test statistic would silently propagate NaN/inf through results.
+    if len(g1) < 2 or len(g2) < 2:
+        raise ValueError(
+            f"Each group must have at least 2 finite values after dropping NaNs, "
+            f"got group1={len(g1)}, group2={len(g2)}. "
+            "Check that the input contains sufficient valid data."
+        )
+
     # Welch's t-test (equal_var=False): does not assume equal variances,
     # which is safer for groups that may have very different sizes
     t_stat, p_val = stats.ttest_ind(g1, g2, equal_var=False)

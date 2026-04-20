@@ -7,6 +7,7 @@ on known inputs.
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from src.stats.tests import (
     TestResult,
@@ -55,6 +56,18 @@ class TestIndependentTTest:
         # Should use 4 values per group (NaN dropped)
         assert result.n_group1 == 4
         assert result.n_group2 == 4
+
+    def test_raises_on_insufficient_values_after_nan_drop(self) -> None:
+        """Groups with fewer than 2 finite values should raise ValueError."""
+        g1: np.ndarray = np.array([1.0])
+        g2: np.ndarray = np.array([2.0, 3.0, 4.0])
+        with pytest.raises(ValueError, match="at least 2 finite values"):
+            independent_t_test(g1, g2, "too_small")
+
+        # All-NaN group should also trigger the guard
+        g_all_nan: np.ndarray = np.array([np.nan, np.nan])
+        with pytest.raises(ValueError, match="at least 2 finite values"):
+            independent_t_test(g_all_nan, g2, "all_nan")
 
     def test_confidence_interval_contains_mean_diff(self) -> None:
         """The 95% CI should contain the observed mean difference."""
