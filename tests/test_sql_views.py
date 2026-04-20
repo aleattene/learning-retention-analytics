@@ -120,7 +120,7 @@ class TestDropoutTiming:
         assert df["cnt"].iloc[0] == 0
 
     def test_dropout_pct_reasonable(self, db_conn: duckdb.DuckDBPyConnection) -> None:
-        """dropout_pct should be mostly between 0 and 100."""
+        """dropout_pct should be mostly between -100 and 200 (reasonable bounds)."""
         df: pd.DataFrame = execute_query(
             """
             SELECT
@@ -130,9 +130,11 @@ class TestDropoutTiming:
             """,
             conn=db_conn,
         )
-        # Some edge cases may exceed 100% (withdrawal after official end)
-        # but minimum should be positive
-        assert df["min_pct"].iloc[0] >= 0
+        # Negative values are valid: pre-course withdrawals (before day 0)
+        # Values > 100% possible if withdrawal happened after official end date
+        # Sanity check: percentages should stay within plausible bounds
+        assert df["min_pct"].iloc[0] >= -100
+        assert df["max_pct"].iloc[0] <= 200
 
 
 class TestCourseProfile:

@@ -23,7 +23,9 @@ SELECT
     c.module_presentation_length AS course_length,
 
     -- How far through the course the student was when they withdrew
-    -- Expressed as a percentage: 0% = withdrew before start, 100% = withdrew at end
+    -- Expressed as a percentage: 0% = withdrew at course start, 100% = withdrew at end
+    -- Negative values are intentional: they represent pre-course withdrawals
+    -- (student unregistered before day 0), which is a distinct attrition signal
     -- Values > 100% are possible if unregistration happened after official end date
     ROUND(
         100.0 * se.dropout_day / c.module_presentation_length,
