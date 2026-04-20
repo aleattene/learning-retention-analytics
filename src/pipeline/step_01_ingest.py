@@ -14,7 +14,7 @@ from pathlib import Path
 import duckdb
 
 from src.config import DATA_SAMPLE_DIR, OULAD_TABLES, RAW_DATA_DIR, SQL_DIR
-from src.db.connection import execute_sql_file, get_connection, get_default_connection
+from src.db.connection import execute_sql_file, get_default_connection
 
 logger = logging.getLogger(__name__)
 

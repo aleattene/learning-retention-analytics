@@ -126,6 +126,8 @@ def push_csvs_to_sheets(
         data: list[list] = [df.columns.tolist()] + df.to_numpy().tolist()
         worksheet.update(data, value_input_option="RAW")
 
-        logger.info("Pushed %s: %d rows to sheet '%s'", csv_path.name, len(df), sheet_name)
+        logger.info(
+            "Pushed %s: %d rows to sheet '%s'", csv_path.name, len(df), sheet_name
+        )
 
     logger.info("Sheets push complete: %d worksheets updated", len(csv_paths))

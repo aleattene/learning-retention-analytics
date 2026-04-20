@@ -15,7 +15,7 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from src.config import ANALYSIS_DIR, PUSH_TO_SHEETS, QUERIES_DIR, VIEWS_DIR
+from src.config import ANALYSIS_DIR, PUSH_TO_SHEETS, QUERIES_DIR
 from src.db.connection import execute_query, get_default_connection
 
 logger = logging.getLogger(__name__)
@@ -83,9 +83,7 @@ def export(
     try:
         # Export analytical views (simple SELECT * from each view)
         for view_name in EXPORT_VIEWS:
-            df: pd.DataFrame = execute_query(
-                f"SELECT * FROM {view_name}", conn=conn
-            )
+            df: pd.DataFrame = execute_query(f"SELECT * FROM {view_name}", conn=conn)
             path: Path = _export_dataframe(df, view_name, output_dir)
             exported.append(path)
 

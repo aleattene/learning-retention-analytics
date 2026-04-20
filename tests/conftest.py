@@ -7,11 +7,10 @@ The db_conn fixture is session-scoped: the database is created once per
 test session and shared across all tests (read-only access pattern).
 """
 
-import pytest
 import duckdb
+import pytest
 
-from src.config import DATA_SAMPLE_DIR, SQL_DIR, VIEWS_DIR
-from src.db.connection import get_connection, execute_sql_file
+from src.db.connection import get_connection
 from src.pipeline.step_01_ingest import ingest
 from src.pipeline.step_02_transform import transform
 

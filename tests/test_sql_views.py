@@ -111,9 +111,7 @@ class TestEngagementEarly:
 class TestDropoutTiming:
     """Tests for v_dropout_timing view."""
 
-    def test_only_withdrawn_students(
-        self, db_conn: duckdb.DuckDBPyConnection
-    ) -> None:
+    def test_only_withdrawn_students(self, db_conn: duckdb.DuckDBPyConnection) -> None:
         """This view should only contain students who explicitly withdrew."""
         df: pd.DataFrame = execute_query(
             "SELECT COUNT(*) AS cnt FROM v_dropout_timing WHERE dropout_day IS NULL",
@@ -121,9 +119,7 @@ class TestDropoutTiming:
         )
         assert df["cnt"].iloc[0] == 0
 
-    def test_dropout_pct_reasonable(
-        self, db_conn: duckdb.DuckDBPyConnection
-    ) -> None:
+    def test_dropout_pct_reasonable(self, db_conn: duckdb.DuckDBPyConnection) -> None:
         """dropout_pct should be mostly between 0 and 100."""
         df: pd.DataFrame = execute_query(
             """
@@ -142,9 +138,7 @@ class TestDropoutTiming:
 class TestCourseProfile:
     """Tests for v_course_profile view."""
 
-    def test_completion_rate_bounded(
-        self, db_conn: duckdb.DuckDBPyConnection
-    ) -> None:
+    def test_completion_rate_bounded(self, db_conn: duckdb.DuckDBPyConnection) -> None:
         """Completion rate should be between 0% and 100%."""
         df: pd.DataFrame = execute_query(
             """

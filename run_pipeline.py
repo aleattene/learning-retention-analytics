@@ -11,7 +11,6 @@ where the full OULAD dataset (~450 MB) is not available.
 
 import argparse
 import logging
-import sys
 
 from src.pipeline.step_01_ingest import ingest
 from src.pipeline.step_02_transform import transform

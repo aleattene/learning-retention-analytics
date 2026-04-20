@@ -12,14 +12,15 @@ import pandas as pd
 
 from src.db.connection import execute_query, get_connection
 from src.pipeline.step_01_ingest import ingest
-from src.pipeline.step_02_transform import transform
-from src.pipeline.step_03_export import export, EXPORT_VIEWS
+from src.pipeline.step_03_export import EXPORT_VIEWS, export
 
 
 class TestIngest:
     """Test step 01 — CSV to DuckDB raw tables."""
 
-    def test_ingest_creates_all_tables(self, db_conn: duckdb.DuckDBPyConnection) -> None:
+    def test_ingest_creates_all_tables(
+        self, db_conn: duckdb.DuckDBPyConnection
+    ) -> None:
         """All 7 OULAD tables should exist after ingest."""
         from src.config import OULAD_TABLES
 
@@ -38,10 +39,18 @@ class TestIngest:
             "SELECT * FROM studentInfo LIMIT 1", conn=db_conn
         )
         expected_cols: set[str] = {
-            "id_student", "code_module", "code_presentation",
-            "gender", "region", "highest_education", "imd_band",
-            "age_band", "num_of_prev_attempts", "studied_credits",
-            "disability", "final_result",
+            "id_student",
+            "code_module",
+            "code_presentation",
+            "gender",
+            "region",
+            "highest_education",
+            "imd_band",
+            "age_band",
+            "num_of_prev_attempts",
+            "studied_credits",
+            "disability",
+            "final_result",
         }
         assert expected_cols.issubset(set(df.columns))
 
@@ -51,14 +60,14 @@ class TestIngest:
 
         # Run ingest twice on the same connection
         ingest(conn=conn, use_sample=True)
-        count_first: int = conn.execute(
-            "SELECT COUNT(*) FROM studentInfo"
-        ).fetchone()[0]
+        count_first: int = conn.execute("SELECT COUNT(*) FROM studentInfo").fetchone()[
+            0
+        ]
 
         ingest(conn=conn, use_sample=True)
-        count_second: int = conn.execute(
-            "SELECT COUNT(*) FROM studentInfo"
-        ).fetchone()[0]
+        count_second: int = conn.execute("SELECT COUNT(*) FROM studentInfo").fetchone()[
+            0
+        ]
 
         # Counts should be identical (DROP + CREATE ensures no duplicates)
         assert count_first == count_second
@@ -136,9 +145,7 @@ class TestTransform:
 class TestExport:
     """Test step 03 — views to CSV files."""
 
-    def test_export_creates_csv_files(
-        self, db_conn: duckdb.DuckDBPyConnection
-    ) -> None:
+    def test_export_creates_csv_files(self, db_conn: duckdb.DuckDBPyConnection) -> None:
         """Export should create CSV files in the output directory."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir: Path = Path(tmpdir)

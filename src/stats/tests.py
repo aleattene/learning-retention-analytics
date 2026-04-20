@@ -81,11 +81,15 @@ def independent_t_test(
         ((len(g1) - 1) * np.var(g1, ddof=1) + (len(g2) - 1) * np.var(g2, ddof=1))
         / (len(g1) + len(g2) - 2)
     )
-    cohens_d: float = (np.mean(g1) - np.mean(g2)) / pooled_std if pooled_std > 0 else 0.0
+    cohens_d: float = (
+        (np.mean(g1) - np.mean(g2)) / pooled_std if pooled_std > 0 else 0.0
+    )
 
     # 95% CI for the difference in means
     mean_diff: float = float(np.mean(g1) - np.mean(g2))
-    se_diff: float = np.sqrt(np.var(g1, ddof=1) / len(g1) + np.var(g2, ddof=1) / len(g2))
+    se_diff: float = np.sqrt(
+        np.var(g1, ddof=1) / len(g1) + np.var(g2, ddof=1) / len(g2)
+    )
     ci_lower: float = mean_diff - 1.96 * se_diff
     ci_upper: float = mean_diff + 1.96 * se_diff
 
@@ -142,7 +146,11 @@ def chi_square_test(
 
     logger.debug(
         "chi2 %s: χ²=%.3f, p=%.4f, V=%.3f, dof=%d",
-        variable_name, chi2, p_val, cramers_v, dof,
+        variable_name,
+        chi2,
+        p_val,
+        cramers_v,
+        dof,
     )
 
     return TestResult(
@@ -249,10 +257,12 @@ def bootstrap_ci(
     arr = arr[~np.isnan(arr)]
 
     # Generate bootstrap distribution by resampling with replacement
-    boot_stats: np.ndarray = np.array([
-        statistic_fn(rng.choice(arr, size=len(arr), replace=True))
-        for _ in range(n_bootstrap)
-    ])
+    boot_stats: np.ndarray = np.array(
+        [
+            statistic_fn(rng.choice(arr, size=len(arr), replace=True))
+            for _ in range(n_bootstrap)
+        ]
+    )
 
     # Percentile method: simple and robust for most use cases
     alpha: float = (1 - confidence) / 2

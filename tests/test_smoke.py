@@ -17,16 +17,20 @@ class TestImports:
         from src.db import connection  # noqa: F401
 
     def test_import_pipeline_steps(self) -> None:
-        from src.pipeline import step_01_ingest  # noqa: F401
-        from src.pipeline import step_02_transform  # noqa: F401
-        from src.pipeline import step_03_export  # noqa: F401
+        from src.pipeline import (
+            step_01_ingest,  # noqa: F401
+            step_02_transform,  # noqa: F401
+            step_03_export,  # noqa: F401
+        )
 
     def test_import_stats(self) -> None:
         from src.stats import tests  # noqa: F401
 
     def test_import_utils(self) -> None:
-        from src.utils import logging  # noqa: F401
-        from src.utils import runtime  # noqa: F401
+        from src.utils import (
+            logging,  # noqa: F401
+            runtime,  # noqa: F401
+        )
 
 
 class TestConnection:
@@ -45,6 +49,7 @@ class TestConnection:
     def test_execute_query_returns_dataframe(self) -> None:
         """execute_query should return a pandas DataFrame."""
         import pandas as pd
+
         from src.db.connection import execute_query, get_connection
 
         conn = get_connection(db_path=None)
