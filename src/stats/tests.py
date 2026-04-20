@@ -135,6 +135,16 @@ def chi_square_test(
     if isinstance(observed, pd.DataFrame):
         observed = observed.values
 
+    # Guard: chi-square requires at least a 2×2 contingency table.
+    # A 1×N or N×1 table means one variable has a single category,
+    # so there is no association to test (and scipy would raise).
+    if observed.ndim != 2 or observed.shape[0] < 2 or observed.shape[1] < 2:
+        raise ValueError(
+            f"Contingency table must be at least 2×2, got {observed.shape}. "
+            "A degenerate table means one variable has a single category — "
+            "chi-square test is not applicable."
+        )
+
     chi2, p_val, dof, _ = stats.chi2_contingency(observed)
 
     # Cramér's V: effect size for chi-square
@@ -255,6 +265,15 @@ def bootstrap_ci(
     rng = np.random.default_rng(seed)
     arr: np.ndarray = np.asarray(data, dtype=float)
     arr = arr[~np.isnan(arr)]
+
+    # Guard: bootstrap requires at least one finite value to resample from.
+    # An empty array (all NaN or empty input) would produce a (nan, nan)
+    # interval silently — better to fail explicitly.
+    if len(arr) == 0:
+        raise ValueError(
+            "Cannot compute bootstrap CI: no finite values remain after "
+            "dropping NaNs. Check that the input contains valid data."
+        )
 
     # Generate bootstrap distribution by resampling with replacement
     boot_stats: np.ndarray = np.array(
