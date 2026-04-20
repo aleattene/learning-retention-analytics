@@ -81,7 +81,9 @@ class TestConfig:
         assert "studentVle" in OULAD_TABLES
         assert "courses" in OULAD_TABLES
 
-    def test_push_to_sheets_default_false(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_push_to_sheets_default_false(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """PUSH_TO_SHEETS should default to False when env var is not set."""
         import importlib
 
