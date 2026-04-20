@@ -14,6 +14,7 @@ NO machine learning. This module is the statistical backbone of BQ2 and BQ3.
 
 import logging
 from dataclasses import dataclass
+from typing import ClassVar
 
 import numpy as np
 import pandas as pd
@@ -29,6 +30,11 @@ class TestResult:
     Every test in this module returns a TestResult, making it easy
     to build comparison tables across multiple variables.
     """
+
+    # Prevent pytest from collecting this dataclass as a test class
+    # (its name starts with "Test", which triggers PytestCollectionWarning).
+    # ClassVar is excluded from dataclass fields by design.
+    __test__: ClassVar[bool] = False
 
     test_name: str
     statistic: float
@@ -91,9 +97,19 @@ def independent_t_test(
         ((len(g1) - 1) * np.var(g1, ddof=1) + (len(g2) - 1) * np.var(g2, ddof=1))
         / (len(g1) + len(g2) - 2)
     )
-    cohens_d: float = (
-        (np.mean(g1) - np.mean(g2)) / pooled_std if pooled_std > 0 else 0.0
-    )
+    # When pooled_std is zero both groups have zero variance (all values
+    # identical within each group).  If the means also match, Cohen's d is
+    # genuinely 0.  If the means differ, the effect is theoretically infinite
+    # — returning 0.0 would silently hide a real difference.
+    if pooled_std == 0:
+        mean_g1: float = float(np.mean(g1))
+        mean_g2: float = float(np.mean(g2))
+        if mean_g1 == mean_g2:
+            cohens_d: float = 0.0
+        else:
+            cohens_d = float(np.sign(mean_g1 - mean_g2)) * float("inf")
+    else:
+        cohens_d = float((np.mean(g1) - np.mean(g2)) / pooled_std)
 
     # 95% CI for the difference in means using Welch-Satterthwaite
     # degrees of freedom — matches the Welch t-test above instead of
@@ -103,13 +119,21 @@ def independent_t_test(
     s2_sq_n: float = np.var(g2, ddof=1) / len(g2)
     se_diff: float = np.sqrt(s1_sq_n + s2_sq_n)
 
-    # Welch-Satterthwaite approximation for effective degrees of freedom
-    df_welch: float = (s1_sq_n + s2_sq_n) ** 2 / (
-        s1_sq_n**2 / (len(g1) - 1) + s2_sq_n**2 / (len(g2) - 1)
-    )
-    t_crit: float = float(stats.t.ppf(0.975, df_welch))
-    ci_lower: float = mean_diff - t_crit * se_diff
-    ci_upper: float = mean_diff + t_crit * se_diff
+    # When both groups have zero variance, se_diff is 0 and the
+    # Welch-Satterthwaite formula produces 0/0 → NaN.  In this
+    # degenerate case there is no sampling uncertainty: the CI
+    # collapses to a single point (the observed mean difference).
+    if se_diff == 0:
+        ci_lower: float = mean_diff
+        ci_upper: float = mean_diff
+    else:
+        # Welch-Satterthwaite approximation for effective degrees of freedom
+        df_welch: float = (s1_sq_n + s2_sq_n) ** 2 / (
+            s1_sq_n**2 / (len(g1) - 1) + s2_sq_n**2 / (len(g2) - 1)
+        )
+        t_crit: float = float(stats.t.ppf(0.975, df_welch))
+        ci_lower = mean_diff - t_crit * se_diff
+        ci_upper = mean_diff + t_crit * se_diff
 
     logger.debug(
         "t-test %s: t=%.3f, p=%.4f, d=%.3f", variable_name, t_stat, p_val, cohens_d
