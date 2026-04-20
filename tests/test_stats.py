@@ -149,8 +149,6 @@ class TestMultipleComparisonCorrection:
 
     def test_invalid_method_raises(self) -> None:
         """Unknown correction method should raise ValueError."""
-        import pytest
-
         with pytest.raises(ValueError, match="Unknown correction method"):
             apply_multiple_comparison_correction([0.05], method="invalid")
 

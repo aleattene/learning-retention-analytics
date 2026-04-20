@@ -95,13 +95,21 @@ def independent_t_test(
         (np.mean(g1) - np.mean(g2)) / pooled_std if pooled_std > 0 else 0.0
     )
 
-    # 95% CI for the difference in means
+    # 95% CI for the difference in means using Welch-Satterthwaite
+    # degrees of freedom — matches the Welch t-test above instead of
+    # the normal approximation (z=1.96), which undercovers for small samples
     mean_diff: float = float(np.mean(g1) - np.mean(g2))
-    se_diff: float = np.sqrt(
-        np.var(g1, ddof=1) / len(g1) + np.var(g2, ddof=1) / len(g2)
+    s1_sq_n: float = np.var(g1, ddof=1) / len(g1)
+    s2_sq_n: float = np.var(g2, ddof=1) / len(g2)
+    se_diff: float = np.sqrt(s1_sq_n + s2_sq_n)
+
+    # Welch-Satterthwaite approximation for effective degrees of freedom
+    df_welch: float = (s1_sq_n + s2_sq_n) ** 2 / (
+        s1_sq_n**2 / (len(g1) - 1) + s2_sq_n**2 / (len(g2) - 1)
     )
-    ci_lower: float = mean_diff - 1.96 * se_diff
-    ci_upper: float = mean_diff + 1.96 * se_diff
+    t_crit: float = float(stats.t.ppf(0.975, df_welch))
+    ci_lower: float = mean_diff - t_crit * se_diff
+    ci_upper: float = mean_diff + t_crit * se_diff
 
     logger.debug(
         "t-test %s: t=%.3f, p=%.4f, d=%.3f", variable_name, t_stat, p_val, cohens_d
