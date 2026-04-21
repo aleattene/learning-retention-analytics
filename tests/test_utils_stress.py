@@ -44,13 +44,13 @@ class TestStepTimerStress:
         # The 'completed in' message should appear because it's in finally
         assert "Failing Step completed in" in caplog.text
 
-    def test_timer_measures_actual_time(self) -> None:
-        """Elapsed time should be approximately correct."""
-        with step_timer("Timed Step") as _:
-            time.sleep(0.1)
+    def test_timer_measures_actual_time(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Elapsed time should be logged after a real delay."""
+        with caplog.at_level(logging.INFO, logger="src.utils.runtime"):
+            with step_timer("Timed Step"):
+                time.sleep(0.1)
 
-        # The step_timer logs the time but doesn't return it.
-        # We just verify it doesn't crash with a real delay.
+        assert "Timed Step completed in" in caplog.text
 
     def test_timer_with_empty_step_name(self, caplog: pytest.LogCaptureFixture) -> None:
         """Empty step name should not crash — just produce odd log messages."""
