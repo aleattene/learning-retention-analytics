@@ -76,9 +76,10 @@ class TestTTestExtremeValues:
     def test_very_large_values(self) -> None:
         """Should handle large values without overflow.
 
-        At extreme magnitudes like 1e150, float64 cannot distinguish
-        adjacent integers (big + 1 == big).  We use spacing large
-        enough to be representable at the chosen magnitude.
+        We use 1e10 rather than truly extreme magnitudes (e.g. 1e150)
+        because float64 cannot distinguish adjacent integers at those
+        scales (big + 1 == big).  At 1e10 the +1 spacing is still
+        representable, so the two groups remain genuinely distinct.
         """
         big: float = 1e10
         g1: np.ndarray = np.array([big, big + 1, big + 2, big + 3, big + 4])
