@@ -48,7 +48,7 @@ Ogni pattern analitico di questo progetto è portabile ad altri domini:
 | Pattern | EdTech (questo progetto) | Retention SaaS | Churn Abbonamenti | App Fitness |
 |---------|--------------------------|----------------|-------------------|-------------|
 | Analisi per coorte | Abbandono per coorte di iscrizione | Conversione trial-to-paid per mese di registrazione | Tasso di rinnovo per fascia di abbonamento | Retention a 30 giorni per flusso di onboarding |
-| Analisi funnel | Iscrizione → primo click → valutazione → completamento | Registrazione → attivazione → abitudine → upgrade | Sottoscrizione → utilizzo → rinnovo | Download → primo allenamento → abitudine settimanale |
+| Analisi funnel | Iscrizione -> primo click -> valutazione -> completamento | Registrazione -> attivazione -> abitudine -> upgrade | Sottoscrizione -> utilizzo -> rinnovo | Download -> primo allenamento -> abitudine settimanale |
 | Segmentazione engagement | Intensità click nei primi 28 giorni | Adozione funzionalità nei primi 14 giorni | Frequenza d'uso prima della finestra di rinnovo | Frequenza sessioni nel primo mese |
 | Analisi di sopravvivenza | Curve cumulative di ritiro | Time-to-churn Kaplan-Meier | Sopravvivenza abbonamento per tipo di piano | Giorni-al-disimpegno per tipo di attività |
 
