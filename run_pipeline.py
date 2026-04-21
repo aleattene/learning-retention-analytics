@@ -1,8 +1,11 @@
 """Pipeline orchestrator — runs all ETL steps in sequence.
 
 Entry point for the entire analytical pipeline:
-  python -m run_pipeline           # full dataset (data/raw/)
-  python -m run_pipeline --sample  # sample data (data_sample/)
+  python -m run_pipeline                    # all steps, full dataset
+  python -m run_pipeline --sample           # all steps, sample data
+  python -m run_pipeline --step ingest      # single step only
+  python -m run_pipeline --step transform   # single step only
+  python -m run_pipeline --step export      # single step only
 
 Each step is idempotent, so re-running the pipeline always produces
 a consistent result. The --sample flag is essential for CI and testing,
@@ -27,6 +30,12 @@ def main() -> None:
         description="Learning Retention Analytics — ETL Pipeline"
     )
     parser.add_argument(
+        "--step",
+        choices=["ingest", "transform", "export"],
+        default=None,
+        help="Run a single pipeline step instead of the full pipeline",
+    )
+    parser.add_argument(
         "--sample",
         action="store_true",
         help="Use data_sample/ instead of data/raw/ (for testing and CI)",
@@ -42,22 +51,26 @@ def main() -> None:
     setup_logging(level=logging.DEBUG if args.debug else logging.INFO)
     log_environment()
 
+    # None = run all steps, otherwise run only the requested one
+    run_step: str | None = args.step
+
     logger.info(
-        "Pipeline starting — source: %s",
+        "Pipeline starting — source: %s, step: %s",
         "data_sample" if args.sample else "data/raw",
+        run_step or "all",
     )
 
-    # Step 1: Load CSV files into DuckDB raw tables
-    with step_timer("Step 01 — Ingest"):
-        ingest(use_sample=args.sample)
+    if run_step in (None, "ingest"):
+        with step_timer("Step 01 — Ingest"):
+            ingest(use_sample=args.sample)
 
-    # Step 2: Create analytical views from raw tables
-    with step_timer("Step 02 — Transform"):
-        transform()
+    if run_step in (None, "transform"):
+        with step_timer("Step 02 — Transform"):
+            transform()
 
-    # Step 3: Export views to CSV (+ optional Sheets push)
-    with step_timer("Step 03 — Export"):
-        export()
+    if run_step in (None, "export"):
+        with step_timer("Step 03 — Export"):
+            export()
 
     logger.info("Pipeline complete")
 
