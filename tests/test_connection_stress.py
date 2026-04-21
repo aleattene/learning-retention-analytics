@@ -104,18 +104,29 @@ class TestExecuteQueryEdgeCases:
     def test_sql_injection_attempt_in_value(self) -> None:
         """SQL injection via string values should not break the query.
 
-        This is a defense-in-depth check: our pipeline uses parameterized
-        queries where user input might be involved.
+        Inserts a value containing typical injection characters (quotes,
+        semicolons, comment markers) and retrieves it via parameterized
+        query to verify that parameter binding treats it as a literal.
         """
         conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
         conn.execute("CREATE TABLE users (name VARCHAR)")
-        conn.execute("INSERT INTO users VALUES ('safe_name')")
 
-        # A naive injection attempt — should be treated as a literal string
+        # Payload with classic injection characters: quote, semicolon, comment
+        injection_payload: str = "Robert'; DROP TABLE users;--"
+        conn.execute("INSERT INTO users VALUES (?)", [injection_payload])
+
+        # Retrieve via parameterized query — binding must treat it as literal
         df: pd.DataFrame = execute_query(
-            "SELECT * FROM users WHERE name = 'safe_name'", conn=conn
+            "SELECT * FROM users WHERE name = $name",
+            conn=conn,
+            params={"name": injection_payload},
         )
         assert len(df) == 1
+        assert df["name"].iloc[0] == injection_payload
+
+        # Table must still exist (the injection did not execute)
+        count: int = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+        assert count == 1
         conn.close()
 
     def test_query_with_special_characters(self) -> None:
