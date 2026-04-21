@@ -113,16 +113,16 @@ cd learning-retention-analytics
 python -m venv .venv
 source .venv/bin/activate
 
-# Installa le dipendenze
+# Installa le dipendenze dai lockfile pinnati
 pip install pip-tools
-pip-compile requirements.in
-pip-compile requirements-dev.in
-pip-compile requirements-test.in
 pip-sync requirements-dev.txt
 
 # Installa i pre-commit hook
 pre-commit install
 ```
+
+> **Nota maintainer**: per aggiornare le dipendenze, modificare i file `.in`
+> e ricompilare: `pip-compile requirements.in && pip-compile requirements-dev.in && pip-compile requirements-test.in`
 
 ### Download del dataset OULAD
 
