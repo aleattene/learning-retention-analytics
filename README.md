@@ -16,7 +16,7 @@ drop-out in online education using the
 [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset),
 ~32,000 students, 7 courses, complete behavioral clickstream.
 
-The project follows a **SQL-driven analytical pipeline**: DuckDB as a
+The project follows a **SQL - driven analytical pipeline**: DuckDB as a
 local-first analytical database, descriptive and inferential statistics,
 and a Looker Studio dashboard.
 
@@ -48,7 +48,7 @@ Every analytical pattern in this project is portable to other domains:
 | Pattern | EdTech (this project) | SaaS Retention | Subscription Churn | Fitness App |
 |---------|----------------------|----------------|---------------------|-------------|
 | Cohort analysis | Enrollment cohort dropout | Trial-to-paid conversion by signup month | Renewal rate by subscription tier | 30-day retention by onboarding flow |
-| Funnel analysis | Registration → first click → assessment → completion | Signup → activation → habit → upgrade | Subscribe → engage → renew | Download → first workout → weekly habit |
+| Funnel analysis | Registration -> first click -> assessment -> completion | Signup -> activation -> habit -> upgrade | Subscribe -> engage -> renew | Download -> first workout -> weekly habit |
 | Engagement segmentation | Click intensity in first 28 days | Feature adoption in first 14 days | Usage frequency before renewal window | Session frequency in first month |
 | Survival-style dropout | Cumulative withdrawal curves | Time-to-churn Kaplan-Meier | Subscription survival by plan type | Days-to-lapse by activity type |
 
@@ -59,7 +59,7 @@ Every analytical pattern in this project is portable to other domains:
 | Layer | Technology | Rationale |
 |-------|------------|-----------|
 | Analytical DB | **DuckDB** (local-first) | Zero-cost, SQL-first, BigQuery migration path |
-| SQL dialect | **ANSI SQL** only | No DuckDB-specific syntax — cloud-portable |
+| SQL dialect | **ANSI SQL** only | No DuckDB-specific syntax - cloud-portable |
 | Language | **Python 3.13+** | Pipeline orchestration, statistics, visualization |
 | Statistics | **SciPy + statsmodels** | t-test, chi-square, confidence intervals, effect sizes |
 | Visualization | **Matplotlib + Seaborn** | Publication-quality charts |
