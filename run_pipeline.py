@@ -1,4 +1,4 @@
-"""Pipeline orchestrator — runs all ETL steps in sequence.
+"""Pipeline orchestrator — runs all ETL steps, or a single one via --step.
 
 Entry point for the entire analytical pipeline:
   python -m run_pipeline                    # all steps, full dataset
@@ -33,7 +33,12 @@ def main() -> None:
         "--step",
         choices=["ingest", "transform", "export"],
         default=None,
-        help="Run a single pipeline step instead of the full pipeline",
+        help=(
+            "Run a single pipeline step instead of the full pipeline. "
+            "When running 'transform' or 'export' by themselves, the "
+            "database/tables/views created by a previous 'ingest' or full "
+            "pipeline run must already exist."
+        ),
     )
     parser.add_argument(
         "--sample",
