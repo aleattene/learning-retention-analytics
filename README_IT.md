@@ -13,7 +13,7 @@
 
 Un **case study di product analytics** che analizza la retention e
 l'abbandono degli studenti nella formazione online, utilizzando
-l'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset), 
+l'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset),
 ~32.000 studenti, 7 corsi, clickstream comportamentale completo.
 
 Il progetto segue una **pipeline analitica SQL-driven**: DuckDB come
