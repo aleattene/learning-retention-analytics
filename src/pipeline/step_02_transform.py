@@ -47,6 +47,7 @@ def transform(
         conn = get_default_connection()
 
     try:
+        created: int = 0
         for view_file in VIEW_ORDER:
             view_path: Path = VIEWS_DIR / view_file
             if not view_path.exists():
@@ -54,9 +55,11 @@ def transform(
                 continue
 
             execute_sql_file(view_path, conn=conn)
+            created += 1
 
         logger.info(
-            "Transform complete: %d views created from %s",
+            "Transform complete: %d/%d views created from %s",
+            created,
             len(VIEW_ORDER),
             VIEWS_DIR,
         )
