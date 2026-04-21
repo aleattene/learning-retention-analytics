@@ -49,8 +49,8 @@ LEFT JOIN (
         sa.id_student,
         a.code_module,
         a.code_presentation,
-        -- FIRST_VALUE + DISTINCT simulates getting the first assessment score
-        -- ordered by submission date, without using DuckDB-specific ARG_MIN
+        -- FIRST_VALUE plus QUALIFY ROW_NUMBER() = 1 gets the first assessment
+        -- score ordered by submission date, without using DuckDB-specific ARG_MIN
         FIRST_VALUE(sa.score) OVER (
             PARTITION BY sa.id_student, a.code_module, a.code_presentation
             ORDER BY sa.date_submitted
