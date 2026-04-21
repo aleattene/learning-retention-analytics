@@ -186,12 +186,8 @@ class TestExecuteSqlFileEdgeCases:
         sql_file.write_text("", encoding="utf-8")
 
         conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
-        # DuckDB may or may not raise on empty input — we just verify
-        # it doesn't crash with an unhandled exception
-        try:
-            execute_sql_file(sql_file, conn=conn)
-        except Exception:
-            pass  # Some engines reject empty statements — that's acceptable
+        # DuckDB accepts empty input without error; verify that holds
+        execute_sql_file(sql_file, conn=conn)
         conn.close()
 
     def test_sql_file_with_multiple_statements(self, tmp_path: Path) -> None:
