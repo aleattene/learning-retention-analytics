@@ -38,6 +38,9 @@ def get_connection(
     duckdb.DuckDBPyConnection
     """
     if db_path is None:
+        # DuckDB does not support read_only on :memory: connections —
+        # the parameter is silently ignored. This is expected: in-memory
+        # DBs are ephemeral test fixtures, not shared resources.
         logger.debug("Opening in-memory DuckDB connection")
         return duckdb.connect(":memory:")
 
