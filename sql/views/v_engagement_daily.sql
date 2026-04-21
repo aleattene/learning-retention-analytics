@@ -3,9 +3,8 @@
 -- Aggregates the raw clickstream (studentVle) to one row per student per day,
 -- summing clicks across all VLE resources and counting distinct resource types.
 --
--- This view serves two purposes:
---   1. Input for v_engagement_early (filters to first 28 days)
---   2. Direct use in EDA notebooks for temporal engagement patterns
+-- This view is used directly in EDA notebooks and other analyses of temporal
+-- engagement patterns at a per-student, per-day level.
 --
 -- The join with vle brings in activity_type, enabling analysis of which
 -- resource types (forum, content, quiz) drive engagement.

@@ -27,8 +27,10 @@ SELECT
     -- Negative values are intentional: they represent pre-course withdrawals
     -- (student unregistered before day 0), which is a distinct attrition signal
     -- Values > 100% are possible if unregistration happened after official end date
+    -- NULLIF guards against zero-length courses producing a division error;
+    -- yields NULL instead, which is safer for downstream aggregation
     ROUND(
-        100.0 * se.dropout_day / c.module_presentation_length,
+        100.0 * se.dropout_day / NULLIF(c.module_presentation_length, 0),
         1
     ) AS dropout_pct,
 

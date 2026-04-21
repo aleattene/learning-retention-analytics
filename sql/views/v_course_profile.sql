@@ -61,9 +61,11 @@ SELECT
     -- Assessment density: assessments per 30 days of course
     -- Normalizes for course length so a 240-day course with 12 assessments
     -- is comparable to a 120-day course with 6
+    -- NULLIF guards against zero-length courses producing a division error;
+    -- yields NULL instead, consistent with the NULLIF pattern used above
     ROUND(
         30.0 * COALESCE(ast.n_assessments, 0)
-        / c.module_presentation_length,
+        / NULLIF(c.module_presentation_length, 0),
         2
     ) AS assessments_per_30_days,
 
