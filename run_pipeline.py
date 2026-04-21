@@ -35,9 +35,8 @@ def main() -> None:
         default=None,
         help=(
             "Run a single pipeline step instead of the full pipeline. "
-            "When running 'transform' or 'export' by themselves, the "
-            "database/tables/views created by a previous 'ingest' or full "
-            "pipeline run must already exist."
+            "'transform' requires a previous 'ingest' or full pipeline run. "
+            "'export' requires a previous 'transform' or full pipeline run."
         ),
     )
     parser.add_argument(
