@@ -304,6 +304,15 @@ def bootstrap_ci(
     tuple[float, float]
         (lower_bound, upper_bound) of the confidence interval.
     """
+    # Validate parameters at the boundary — invalid values would
+    # produce confusing numpy errors deeper in the computation
+    if not (0 < confidence < 1):
+        raise ValueError(
+            f"confidence must be between 0 and 1 (exclusive), got {confidence}"
+        )
+    if n_bootstrap < 1:
+        raise ValueError(f"n_bootstrap must be a positive integer, got {n_bootstrap}")
+
     rng = np.random.default_rng(seed)
     arr: np.ndarray = np.asarray(data, dtype=float)
     arr = arr[~np.isnan(arr)]

@@ -415,6 +415,20 @@ class TestBootstrapStress:
         lower, upper = bootstrap_ci(data)
         assert lower <= upper
 
+    @pytest.mark.parametrize("bad_confidence", [0.0, 1.0, -0.5, 1.5])
+    def test_invalid_confidence_raises(self, bad_confidence: float) -> None:
+        """Confidence outside (0, 1) should raise ValueError."""
+        data: np.ndarray = np.array([1.0, 2.0, 3.0])
+        with pytest.raises(ValueError, match="confidence must be between"):
+            bootstrap_ci(data, confidence=bad_confidence)
+
+    @pytest.mark.parametrize("bad_n", [0, -1, -100])
+    def test_invalid_n_bootstrap_raises(self, bad_n: int) -> None:
+        """Non-positive n_bootstrap should raise ValueError."""
+        data: np.ndarray = np.array([1.0, 2.0, 3.0])
+        with pytest.raises(ValueError, match="n_bootstrap must be a positive"):
+            bootstrap_ci(data, n_bootstrap=bad_n)
+
     def test_empty_after_nan_drop_raises(self) -> None:
         """All-NaN input should raise ValueError."""
         with pytest.raises(ValueError, match="no finite values"):
