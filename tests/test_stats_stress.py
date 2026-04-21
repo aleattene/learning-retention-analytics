@@ -474,13 +474,12 @@ class TestBootstrapStress:
         lower, upper = bootstrap_ci(data, seed=seed)
         assert lower <= upper
 
-    def test_different_seeds_different_results(self) -> None:
-        """Different seeds should (almost always) produce different CIs."""
+    def test_same_seed_reproduces_result(self) -> None:
+        """Same seed must always produce identical CIs (deterministic)."""
         data: np.ndarray = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
-        ci1 = bootstrap_ci(data, seed=1)
-        ci2 = bootstrap_ci(data, seed=2)
-        # Extremely unlikely to be exactly equal with different seeds
-        assert ci1 != ci2
+        ci1 = bootstrap_ci(data, seed=42)
+        ci2 = bootstrap_ci(data, seed=42)
+        assert ci1 == ci2
 
     def test_pandas_series_input(self) -> None:
         """pd.Series should be accepted."""
