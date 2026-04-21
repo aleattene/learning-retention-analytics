@@ -56,11 +56,13 @@ def ingest(
                 logger.warning("CSV not found, skipping: %s", csv_path)
                 continue
 
-            # DuckDB's read_csv_auto handles type inference and quoting
-            # We INSERT INTO the pre-created table (from schema.sql) rather than
-            # CREATE TABLE AS to ensure schema consistency across runs
+            # BY NAME maps CSV columns to table columns by header name
+            # instead of by position, so column order in the CSV does not
+            # need to match the DDL. This makes the ingest resilient to
+            # differences between real OULAD data and sample data layout.
             conn.execute(
-                f"INSERT INTO {table_name} SELECT * FROM read_csv_auto('{csv_path}')"
+                f"INSERT INTO {table_name} BY NAME "
+                f"SELECT * FROM read_csv_auto('{csv_path}')"
             )
 
             # Log row count for verification

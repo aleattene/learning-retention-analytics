@@ -27,9 +27,9 @@ CREATE TABLE courses (
 -- weight: percentage contribution to final grade (0-100)
 DROP TABLE IF EXISTS assessments;
 CREATE TABLE assessments (
-    id_assessment       INTEGER,
     code_module         VARCHAR,
     code_presentation   VARCHAR,
+    id_assessment       INTEGER,
     assessment_type     VARCHAR,
     date                INTEGER,
     weight              DOUBLE
@@ -37,13 +37,16 @@ CREATE TABLE assessments (
 
 -- VLE resource metadata: describes each learning resource
 -- activity_type: e.g. 'oucontent', 'forumng', 'quiz', 'resource'
+-- week_from / week_to: course weeks during which the resource is available
 -- Each id_site is unique within a module-presentation
 DROP TABLE IF EXISTS vle;
 CREATE TABLE vle (
     id_site             INTEGER,
     code_module         VARCHAR,
     code_presentation   VARCHAR,
-    activity_type       VARCHAR
+    activity_type       VARCHAR,
+    week_from           INTEGER,
+    week_to             INTEGER
 );
 
 -- Student demographics and final outcome
@@ -52,9 +55,9 @@ CREATE TABLE vle (
 -- studied_credits: total credit load the student is taking this presentation
 DROP TABLE IF EXISTS studentInfo;
 CREATE TABLE studentInfo (
-    id_student          INTEGER,
     code_module         VARCHAR,
     code_presentation   VARCHAR,
+    id_student          INTEGER,
     gender              VARCHAR,
     region              VARCHAR,
     highest_education   VARCHAR,
@@ -71,9 +74,9 @@ CREATE TABLE studentInfo (
 -- date_unregistration: days relative to course start when student withdrew (NULL if didn't withdraw)
 DROP TABLE IF EXISTS studentRegistration;
 CREATE TABLE studentRegistration (
-    id_student          INTEGER,
     code_module         VARCHAR,
     code_presentation   VARCHAR,
+    id_student          INTEGER,
     date_registration   INTEGER,
     date_unregistration INTEGER
 );
@@ -98,10 +101,10 @@ CREATE TABLE studentAssessment (
 -- source of behavioral engagement signals
 DROP TABLE IF EXISTS studentVle;
 CREATE TABLE studentVle (
-    id_site             INTEGER,
-    id_student          INTEGER,
     code_module         VARCHAR,
     code_presentation   VARCHAR,
+    id_student          INTEGER,
+    id_site             INTEGER,
     date                INTEGER,
     sum_click           INTEGER
 );
