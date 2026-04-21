@@ -1,7 +1,8 @@
 """Tests for pipeline steps — ingest, transform, export.
 
-All tests use the session-scoped db_conn fixture from conftest.py,
+Most tests use the session-scoped db_conn fixture from conftest.py,
 which provides an in-memory DuckDB pre-loaded with sample data.
+Tests that verify idempotency create their own isolated connections.
 """
 
 import tempfile

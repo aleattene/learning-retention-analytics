@@ -175,9 +175,10 @@ class TestSetupLoggingStress:
     def _preserve_root_logger(self) -> None:
         """Save and restore root logger state to prevent cross-test leaks.
 
-        setup_logging(force=True) replaces handlers and changes the level
-        on the global root logger. Without this fixture, tests that run
-        after this class would inherit whatever level was set last.
+        setup_logging() calls basicConfig(force=True) internally, which
+        replaces handlers and changes the level on the global root logger.
+        Without this fixture, tests that run after this class would
+        inherit whatever level was set last.
         """
         root: logging.Logger = logging.getLogger()
         original_level: int = root.level
