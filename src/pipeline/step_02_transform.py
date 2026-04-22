@@ -57,6 +57,15 @@ def transform(
             execute_sql_file(view_path, conn=conn)
             created += 1
 
+            # Validate view by querying its row count immediately after creation.
+            # This catches silent failures (e.g. empty results due to broken joins)
+            # and gives operators a quick sanity check in the logs.
+            view_name: str = view_file.removesuffix(".sql")
+            row_count: int = conn.execute(
+                f"SELECT COUNT(*) FROM {view_name}"
+            ).fetchone()[0]
+            logger.info("Created %s: %d rows", view_name, row_count)
+
         logger.info(
             "Transform complete: %d/%d views created from %s",
             created,
