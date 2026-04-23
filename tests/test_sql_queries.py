@@ -19,7 +19,7 @@ from src.db.connection import execute_query
 
 def _run_query_file(filename: str, conn: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     """Read a .sql file from QUERIES_DIR and execute it."""
-    sql: str = (QUERIES_DIR / filename).read_text()
+    sql: str = (QUERIES_DIR / filename).read_text(encoding="utf-8")
     return execute_query(sql, conn=conn)
 
 
@@ -82,8 +82,15 @@ class TestBQ1DropoutCurves:
             conn=db_conn,
         )
 
-        # n_enrolled from the BQ1 query (constant within each course-presentation)
+        # n_enrolled from the BQ1 query (must be constant within each
+        # course-presentation — verify before comparing)
         df_bq1: pd.DataFrame = _run_query_file("q_bq1_dropout_curves.sql", db_conn)
+        n_unique_per_group: pd.Series = df_bq1.groupby(
+            ["code_module", "code_presentation"]
+        )["n_enrolled"].nunique()
+        assert (
+            n_unique_per_group == 1
+        ).all(), "n_enrolled varies within some course-presentations in BQ1"
         df_bq1_enrolled: pd.DataFrame = (
             df_bq1.groupby(["code_module", "code_presentation"])["n_enrolled"]
             .first()
@@ -157,7 +164,9 @@ class TestBQ2EarlySignals:
         """
         df: pd.DataFrame = _run_query_file("q_bq2_early_signals.sql", db_conn)
 
-        min_dec: int = df["engagement_decile_in_course"].min()
-        max_dec: int = df["engagement_decile_in_course"].max()
+        deciles: pd.Series = df["engagement_decile_in_course"]
+        assert deciles.notna().all(), "engagement_decile_in_course contains NULL values"
+        min_dec: int = deciles.min()
+        max_dec: int = deciles.max()
         assert min_dec >= 1, f"engagement_decile_in_course went below 1: {min_dec}"
         assert max_dec <= 10, f"engagement_decile_in_course exceeded 10: {max_dec}"
