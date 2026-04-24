@@ -16,6 +16,7 @@ SELECT
     -- === Scale ===
     COUNT(*) AS n_presentations,
     SUM(cp.n_enrolled) AS total_enrolled,
+    SUM(cp.n_completed) AS total_completed,
 
     -- === Outcome metrics (averaged across presentations) ===
     ROUND(AVG(cp.completion_rate_pct), 1) AS avg_completion_rate_pct,
