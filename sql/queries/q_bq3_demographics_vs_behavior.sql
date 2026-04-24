@@ -35,7 +35,10 @@ SELECT
     COALESCE(ee.active_days_first_28, 0) AS active_days_first_28,
     COALESCE(ee.total_clicks_first_28, 0) AS total_clicks_first_28,
     COALESCE(ee.avg_clicks_per_active_day, 0) AS avg_clicks_per_active_day,
-    COALESCE(ee.engagement_decile_in_course, 1) AS engagement_decile_in_course,
+    -- NULL when no matching v_engagement_early row (no VLE activity):
+    -- no decile rank exists for inactive students. Downstream analysis
+    -- treats this as a conditional feature (dropna, not zero).
+    ee.engagement_decile_in_course,
 
     -- Assessment engagement: did the student submit the first assessment?
     -- A binary behavioral signal that's easy to act on
