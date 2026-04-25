@@ -58,7 +58,7 @@ rappresenta una presentazione del corso, colorata per modulo.*
 I **cliff event** — giorni con un numero sproporzionatamente alto di ritiri (sopra il
 95° percentile per quel corso) — coincidono con le scadenze delle valutazioni e il rilascio
 dei voti. Questi sono azionabili: gli interventi possono essere programmati prima delle
-date di cliff note.
+date dei cliff event.
 
 ![Principali cliff event di abbandono](figures/03_dropout_cliffs.png)
 
