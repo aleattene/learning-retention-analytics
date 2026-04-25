@@ -77,7 +77,7 @@ Knowing *when* students leave raises the next question: can we see it coming?
 
 ---
 
-## BQ2 — Which Early Signals Predict Drop-Out?
+## BQ2 — Which Early Signals Predict Dropout?
 
 > **Key finding:** All 8 early engagement metrics tested are significantly associated
 > with dropout after multiple comparison correction (8/8 after both Bonferroni and
@@ -99,15 +99,17 @@ ranking, followed by last active day and average click intensity.
 Benjamini-Hochberg correction. Vertical reference lines mark small, medium, and
 large effect thresholds.*
 
-The most dramatic contrast is between **ghost students** (zero VLE activity in the first
-28 days) and active students. Ghost students have a near-zero completion rate, while
-active students complete at a rate close to the platform average. The 95% bootstrap
-confidence intervals do not overlap.
+The most dramatic contrast is between **ghost students** — those with zero VLE activity
+in the first 28 days — and active students. Ghost students have a near-zero completion
+rate, while active students complete at a rate close to the platform average. The 95%
+bootstrap confidence intervals do not overlap. (Note: BQ5 broadens this definition to
+include near-zero activity — ≤1 active day AND <10 clicks — to capture the full
+at-risk segment for intervention targeting.)
 
 ![Ghost vs active completion rate](figures/04_ghost_vs_active_completion.png)
 
-*Ghost students — those with zero VLE activity — have near-zero completion rates.
-Error bars show 95% bootstrap confidence intervals.*
+*Ghost students — zero VLE activity in the first 28 days — have near-zero completion
+rates. Error bars show 95% bootstrap confidence intervals.*
 
 The dose-response relationship is **monotonic**: more engagement consistently predicts
 higher completion, with no threshold or diminishing returns. This means the signal is
@@ -187,12 +189,12 @@ of its students; module CCC loses almost two-thirds.
 Exploratory scatter plots reveal suggestive patterns between course design features
 (assessment density, course length) and completion rates. However, with n = 7, any
 correlation is descriptive, not inferential — Spearman rank correlation requires
-|rho| > 0.79 for significance at this sample size.
+`|rho| > 0.79` for significance at this sample size.
 
 ![Course design vs completion](figures/06_course_design_vs_completion.png)
 
 *Assessment density and course length show suggestive associations with completion.
-Each point is one course-presentation.*
+Each point is one module (averaged across its presentations).*
 
 **Critical caveats:** These patterns are confounded by at least three factors: (1) subject
 difficulty — some modules teach inherently harder material; (2) student self-selection —
