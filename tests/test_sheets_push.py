@@ -24,7 +24,7 @@ VALID_SA_JSON: dict = {
     "type": "service_account",
     "client_email": "test@project.iam.gserviceaccount.com",
     "private_key": (
-        "-----BEGIN RSA PRIVATE KEY-----\n" "fake\n" "-----END RSA PRIVATE KEY-----\n"
+        "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n"
     ),
     "token_uri": "https://oauth2.googleapis.com/token",
 }
@@ -105,6 +105,23 @@ class TestAuthorize:
     def test_authorize_propagates_keychain_error(self, mock_kp: MagicMock) -> None:
         """If Keychain fails, _authorize should propagate the RuntimeError."""
         with pytest.raises(RuntimeError, match="Credentials not found"):
+            _authorize()
+
+    @patch("src.sheets.push.gspread.authorize", side_effect=Exception("auth failed"))
+    @patch("src.sheets.push.Credentials.from_service_account_info")
+    @patch(
+        "src.sheets.push.keyring.get_password",
+        return_value=json.dumps(VALID_SA_JSON),
+    )
+    def test_authorize_gspread_failure_propagates(
+        self,
+        mock_kp: MagicMock,
+        mock_creds: MagicMock,
+        mock_auth: MagicMock,
+    ) -> None:
+        """If gspread.authorize() raises, the error should propagate."""
+        mock_creds.return_value = MagicMock()
+        with pytest.raises(Exception, match="auth failed"):
             _authorize()
 
 
@@ -220,3 +237,43 @@ class TestPushCsvsToSheets:
         data_sent = mock_ws.update.call_args[0][0]
         assert data_sent[0] == ["name", "score"]  # header
         assert len(data_sent) == 3  # header + 2 rows
+
+    @patch("src.sheets.push._authorize")
+    def test_push_nonexistent_csv_raises(
+        self, mock_auth: MagicMock, tmp_path: Path
+    ) -> None:
+        """Pushing a CSV path that doesn't exist should raise FileNotFoundError."""
+        fake_csv: Path = tmp_path / "does_not_exist.csv"
+
+        mock_spreadsheet = MagicMock()
+        mock_client = MagicMock()
+        mock_client.open_by_key.return_value = mock_spreadsheet
+        mock_auth.return_value = mock_client
+
+        with pytest.raises(FileNotFoundError):
+            push_csvs_to_sheets([fake_csv], spreadsheet_id="fake-id")
+
+    @patch("src.sheets.push._authorize")
+    def test_push_open_by_key_failure(self, mock_auth: MagicMock) -> None:
+        """Invalid spreadsheet_id should propagate the gspread exception."""
+        import gspread
+
+        mock_client = MagicMock()
+        mock_client.open_by_key.side_effect = gspread.exceptions.SpreadsheetNotFound
+        mock_auth.return_value = mock_client
+
+        with pytest.raises(gspread.exceptions.SpreadsheetNotFound):
+            push_csvs_to_sheets([], spreadsheet_id="invalid-id")
+
+    @patch("src.sheets.push._authorize")
+    def test_push_empty_csv_list(self, mock_auth: MagicMock) -> None:
+        """Pushing an empty list of CSVs should not call worksheet methods."""
+        mock_spreadsheet = MagicMock()
+        mock_client = MagicMock()
+        mock_client.open_by_key.return_value = mock_spreadsheet
+        mock_auth.return_value = mock_client
+
+        push_csvs_to_sheets([], spreadsheet_id="fake-id")
+
+        # No worksheets should be accessed when there are no CSVs
+        mock_spreadsheet.worksheet.assert_not_called()

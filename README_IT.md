@@ -1,7 +1,7 @@
 # Analisi della Retention nell'Apprendimento 🇮🇹 [🇬🇧](README.md)
 
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
-[![Lint & Format](https://github.com/aleattene/learning-retention-analytics/actions/workflows/lint.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/lint.yml)
+[![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
 [![codecov](https://codecov.io/gh/aleattene/learning-retention-analytics/graph/badge.svg?token=LS2ASS9Z6K)](https://codecov.io/gh/aleattene/learning-retention-analytics)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -26,6 +26,8 @@ Le piattaforme di formazione online registrano tassi di abbandono del
 40-60%. Comprendere **dove**, **quando** e **perché** gli studenti si
 disimpegnano è la base di qualsiasi strategia di retention, che si
 tratti di EdTech, abbonamenti SaaS o app per il fitness.
+
+> **Dashboard**: Looker Studio *(in arrivo)*
 
 ---
 
@@ -177,6 +179,40 @@ presso la Open University (UK).
 > Open University Learning Analytics dataset.
 > *Scientific Data*, 4, 170171.
 > Distribuito con licenza [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+---
+
+## Risultati Principali
+
+L'analisi completa è disponibile nel [Report Esecutivo](reports/REPORT_IT.md).
+In sintesi:
+
+- **BQ1**: circa 1 iscrizione su 3 termina con il ritiro esplicito; il dropout
+  si concentra intorno a scadenze di valutazione e rilascio voti
+- **BQ2**: tutti gli 8 segnali comportamentali precoci (primi 28 giorni) sono
+  significativamente associati all'abbandono; giorni attivi e click totali
+  dominano il ranking per effect size
+- **BQ3**: il comportamento è un predittore molto più forte della demografia;
+  in ogni livello di istruzione, l'engagement alto batte l'engagement basso
+- **BQ4**: i tassi di completamento variano dal 37% al 71% tra i 7 moduli;
+  pattern suggestivi con la densità di valutazioni, ma n = 7 non consente
+  conclusioni inferenziali
+- **BQ5**: tre interventi behavior-based (attivazione ghost, checkpoint
+  valutazioni, re-engagement settimana 3) coprono la maggioranza degli
+  studenti a rischio
+
+---
+
+## Documentazione
+
+| Documento | Contenuto |
+|-----------|-----------|
+| [Report Esecutivo](reports/REPORT_IT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
+| [Metodologia](docs/METHODOLOGY_IT.md) | Approccio statistico, scelte progettuali, trade-off |
+| [Trasferibilità](docs/TRANSFERABILITY_IT.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
+| [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso DuckDB → BigQuery, gap e checklist |
+| [ADR](docs/ADR_IT.md) | 7 decisioni architetturali con razionale |
+| [Testing](docs/TESTING_IT.md) | Architettura di test, strategia e decisioni |
 
 ---
 

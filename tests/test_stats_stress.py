@@ -486,3 +486,128 @@ class TestBootstrapStress:
         s: pd.Series = pd.Series([1.0, 2.0, 3.0, 4.0, 5.0])
         lower, upper = bootstrap_ci(s)
         assert lower <= upper
+
+
+# ===================================================================
+# independent_t_test — additional edge cases
+# ===================================================================
+
+
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")
+class TestTTestInfValues:
+    """Test t-test behavior when input data contains inf."""
+
+    def test_inf_in_group_produces_finite_or_nan_result(self) -> None:
+        """Groups containing inf should not crash — result may be nan/inf
+        but the wrapper should not raise."""
+        g1: np.ndarray = np.array([1.0, 2.0, 3.0, float("inf"), 5.0])
+        g2: np.ndarray = np.array([10.0, 11.0, 12.0, 13.0, 14.0])
+        # scipy's ttest_ind handles inf in its own way;
+        # we just verify the wrapper doesn't crash
+        result: TestResult = independent_t_test(g1, g2)
+        assert isinstance(result, TestResult)
+
+    def test_negative_inf_in_group(self) -> None:
+        """Negative inf in group should not crash."""
+        g1: np.ndarray = np.array([1.0, 2.0, float("-inf"), 4.0, 5.0])
+        g2: np.ndarray = np.array([10.0, 11.0, 12.0, 13.0, 14.0])
+        result: TestResult = independent_t_test(g1, g2)
+        assert isinstance(result, TestResult)
+
+
+@pytest.mark.filterwarnings(
+    "ignore:Precision loss occurred in moment calculation:RuntimeWarning"
+)
+class TestTTestPartialZeroVariance:
+    """Test when only one group has zero variance (the other doesn't)."""
+
+    def test_one_group_constant_other_varies(self) -> None:
+        """[5,5,5,5,5] vs normal data: pooled_std > 0 but unbalanced."""
+        g1: np.ndarray = np.array([5.0, 5.0, 5.0, 5.0, 5.0])
+        g2: np.ndarray = np.array([1.0, 3.0, 5.0, 7.0, 9.0])
+        result: TestResult = independent_t_test(g1, g2)
+        assert math.isfinite(result.statistic)
+        assert 0 <= result.p_value <= 1
+        # Cohen's d should be finite because g2 has variance > 0
+        assert math.isfinite(result.effect_size)
+
+    def test_constant_group_same_mean_as_variable(self) -> None:
+        """Constant group has same mean as the other: effect should be ≈ 0."""
+        g1: np.ndarray = np.array([5.0, 5.0, 5.0, 5.0, 5.0])
+        g2: np.ndarray = np.array([3.0, 4.0, 5.0, 6.0, 7.0])
+        result: TestResult = independent_t_test(g1, g2)
+        assert abs(result.effect_size) < 0.1
+
+
+class TestTTestMinimalGroups:
+    """Groups with exactly 2 elements (minimum allowed)."""
+
+    def test_two_elements_each_group(self) -> None:
+        """Minimum viable groups (n=2 each) should produce a valid result."""
+        g1: np.ndarray = np.array([1.0, 100.0])
+        g2: np.ndarray = np.array([50.0, 51.0])
+        result: TestResult = independent_t_test(g1, g2)
+        assert result.n_group1 == 2
+        assert result.n_group2 == 2
+        assert math.isfinite(result.p_value)
+
+    def test_one_element_raises(self) -> None:
+        """A group with exactly 1 element should raise ValueError."""
+        with pytest.raises(ValueError, match="at least 2 finite values"):
+            independent_t_test(np.array([1.0]), np.array([2.0, 3.0, 4.0]))
+
+
+# ===================================================================
+# chi_square_test — additional edge cases
+# ===================================================================
+
+
+class TestChiSquareZeroCells:
+    """Chi-square with zero-count cells (sparse contingency tables)."""
+
+    def test_table_with_zero_cell(self) -> None:
+        """A table with a zero cell should still produce a valid result.
+        scipy handles this via Yates correction or produces a warning."""
+        observed: np.ndarray = np.array([[50, 0], [10, 40]])
+        result: TestResult = chi_square_test(observed)
+        assert math.isfinite(result.statistic)
+        assert 0 <= result.p_value <= 1
+
+    def test_table_with_multiple_zero_cells(self) -> None:
+        """Multiple zero cells but still valid 2×2 structure."""
+        observed: np.ndarray = np.array([[100, 0], [0, 100]])
+        result: TestResult = chi_square_test(observed)
+        assert result.effect_size > 0.9  # Perfect association
+
+
+# ===================================================================
+# bootstrap_ci — additional edge cases
+# ===================================================================
+
+
+class TestBootstrapEdgeCases:
+    """Additional edge cases for bootstrap CI."""
+
+    def test_statistic_fn_returning_nan(self) -> None:
+        """If statistic_fn returns NaN for some resamples, the wrapper
+        should not crash. CI bounds may themselves be NaN because
+        numpy.percentile propagates NaN from the bootstrap distribution."""
+
+        def sometimes_nan(arr: np.ndarray) -> float:
+            """Return NaN if the first element is negative."""
+            return float("nan") if arr[0] < 0 else float(np.mean(arr))
+
+        data: np.ndarray = np.array([-1.0, 2.0, 3.0, 4.0, 5.0])
+        # Should not crash — numpy percentile handles NaN
+        lower, upper = bootstrap_ci(data, statistic_fn=sometimes_nan)
+        # Result may be NaN but should not raise
+        assert isinstance(lower, float)
+        assert isinstance(upper, float)
+
+    def test_small_n_bootstrap(self) -> None:
+        """Very small n_bootstrap (1) should still produce a result."""
+        data: np.ndarray = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+        lower, upper = bootstrap_ci(data, n_bootstrap=1)
+        # With 1 resample, CI collapses to a point
+        assert isinstance(lower, float)
+        assert isinstance(upper, float)
