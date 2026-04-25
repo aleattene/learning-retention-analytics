@@ -1,0 +1,25 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Single source of truth: .pre-commit-config.yaml defines tools and versions.
+      # This replaces direct black/ruff calls to prevent version drift between
+      # local hooks and CI, and adds nbstripout coverage that was previously missing.
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1
