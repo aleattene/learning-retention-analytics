@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 import duckdb
 import pandas as pd
+import pytest
 
 from src.db.connection import execute_query, get_connection
 from src.pipeline.step_01_ingest import ingest
@@ -251,6 +252,98 @@ class TestExportStress:
 # ===================================================================
 # Full pipeline integration stress
 # ===================================================================
+
+
+class TestIngestCSVEdgeCases:
+    """Edge cases for CSV parsing during ingest."""
+
+    def test_header_only_csv_produces_empty_table(self, tmp_path: Path) -> None:
+        """A CSV with headers but no data rows should produce a table with 0 rows."""
+        # Create a minimal source directory with a header-only CSV
+        source_dir: Path = tmp_path / "header_only"
+        source_dir.mkdir()
+
+        # Write header-only CSV for one of the OULAD tables
+        csv_path: Path = source_dir / "courses.csv"
+        csv_path.write_text(
+            "code_module,code_presentation,module_presentation_length\n",
+            encoding="utf-8",
+        )
+
+        conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
+
+        from src.config import SQL_DIR
+        from src.db.connection import execute_sql_file
+
+        execute_sql_file(SQL_DIR / "schema.sql", conn=conn)
+
+        with patch("src.pipeline.step_01_ingest.RAW_DATA_DIR", source_dir):
+            ingest(conn=conn, use_sample=False)
+
+        # courses table should exist but have 0 rows
+        count: int = conn.execute("SELECT COUNT(*) FROM courses").fetchone()[0]
+        assert count == 0
+
+        conn.close()
+
+
+class TestTransformSQLEdgeCases:
+    """Edge cases for SQL view creation during transform."""
+
+    def test_view_with_syntax_error_raises(self, tmp_path: Path) -> None:
+        """A view file with SQL syntax errors should raise an exception."""
+        # Create a views directory with a broken SQL file
+        broken_views: Path = tmp_path / "views"
+        broken_views.mkdir()
+
+        broken_sql: Path = broken_views / "v_student_enriched.sql"
+        broken_sql.write_text(
+            "CRETE OR REPALCE VIEW v_student_enriched AS SELEC 1;",
+            encoding="utf-8",
+        )
+
+        conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
+
+        with patch("src.pipeline.step_02_transform.VIEWS_DIR", broken_views):
+            with pytest.raises(Exception):
+                transform(conn=conn)
+
+        conn.close()
+
+
+class TestExportQueryEdgeCases:
+    """Edge cases for query file handling during export."""
+
+    def test_export_with_push_to_sheets_enabled(self) -> None:
+        """When PUSH_TO_SHEETS is True, _push_to_sheets should be called."""
+        conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
+        ingest(conn=conn, use_sample=True)
+        transform(conn=conn)
+
+        with (
+            tempfile.TemporaryDirectory() as tmpdir,
+            patch("src.pipeline.step_03_export._push_to_sheets") as mock_push,
+            patch("src.pipeline.step_03_export.PUSH_TO_SHEETS", True),
+        ):
+            exported: list[Path] = export(conn=conn, output_dir=Path(tmpdir))
+            mock_push.assert_called_once_with(exported)
+
+        conn.close()
+
+    def test_export_returns_correct_file_count(self) -> None:
+        """Export should return len(EXPORT_VIEWS) + len(EXPORT_QUERIES)."""
+        from src.pipeline.step_03_export import EXPORT_QUERIES
+
+        conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
+        ingest(conn=conn, use_sample=True)
+        transform(conn=conn)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            exported: list[Path] = export(conn=conn, output_dir=Path(tmpdir))
+            expected_count: int = len(EXPORT_VIEWS) + len(EXPORT_QUERIES)
+            assert len(exported) == expected_count
+
+        conn.close()
 
 
 class TestFullPipelineStress:
