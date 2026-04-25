@@ -184,7 +184,7 @@ presso la Open University (UK).
 
 ## Risultati Principali
 
-L'analisi completa è disponibile nel [Report Esecutivo](reports/REPORT.md).
+L'analisi completa è disponibile nel [Report Esecutivo](reports/REPORT_IT.md).
 In sintesi:
 
 - **BQ1**: circa 1 iscrizione su 3 termina con il ritiro esplicito; il dropout
