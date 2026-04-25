@@ -291,7 +291,7 @@ class TestTransformSQLEdgeCases:
     """Edge cases for SQL view creation during transform."""
 
     def test_view_with_syntax_error_raises(self, tmp_path: Path) -> None:
-        """A view file with SQL syntax errors should raise an exception."""
+        """A view file with SQL syntax errors should raise a DuckDB parser error."""
         # Create a views directory with a broken SQL file
         broken_views: Path = tmp_path / "views"
         broken_views.mkdir()
@@ -304,8 +304,9 @@ class TestTransformSQLEdgeCases:
 
         conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
 
+        # Narrow to duckdb errors to avoid masking unrelated failures
         with patch("src.pipeline.step_02_transform.VIEWS_DIR", broken_views):
-            with pytest.raises(Exception):
+            with pytest.raises(duckdb.Error, match=r"(?i)(parser|syntax|parse)"):
                 transform(conn=conn)
 
         conn.close()

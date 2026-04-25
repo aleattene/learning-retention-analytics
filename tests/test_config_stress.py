@@ -152,8 +152,11 @@ class TestPathConstants:
             VIEWS_DIR,
             QUERIES_DIR,
         ]:
-            assert str(path).startswith(
-                str(PROJECT_ROOT)
+            # is_relative_to() avoids false positives from prefix
+            # matching (e.g. /repo-root-2 vs /repo-root) and handles
+            # symlinks via resolve()
+            assert path.resolve().is_relative_to(
+                PROJECT_ROOT.resolve()
             ), f"{path} not under PROJECT_ROOT"
 
 
