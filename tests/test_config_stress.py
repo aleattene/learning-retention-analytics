@@ -21,7 +21,12 @@ class TestPushToSheetsEnvVar:
         """Set PUSH_TO_SHEETS env var to *value*, reload config, return the flag.
 
         If value is None, the env var is removed entirely.
+        The original env var value is saved and restored in the finally
+        block so that other tests are not affected by side effects.
         """
+        # Save the original value to restore it after the test
+        original: str | None = os.environ.get("PUSH_TO_SHEETS")
+
         if value is None:
             os.environ.pop("PUSH_TO_SHEETS", None)
         else:
@@ -32,8 +37,11 @@ class TestPushToSheetsEnvVar:
             importlib.reload(src.config)
             return src.config.PUSH_TO_SHEETS
         finally:
-            # Always restore the default state so other tests aren't affected
-            os.environ.pop("PUSH_TO_SHEETS", None)
+            # Restore the original env var state (present or absent)
+            if original is None:
+                os.environ.pop("PUSH_TO_SHEETS", None)
+            else:
+                os.environ["PUSH_TO_SHEETS"] = original
             importlib.reload(importlib.import_module("src.config"))
 
     def test_true_lowercase(self) -> None:

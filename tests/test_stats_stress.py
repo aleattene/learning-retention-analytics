@@ -589,8 +589,9 @@ class TestBootstrapEdgeCases:
     """Additional edge cases for bootstrap CI."""
 
     def test_statistic_fn_returning_nan(self) -> None:
-        """If statistic_fn returns NaN for some resamples, CI should
-        still be computed (NaN percentiles are valid in numpy)."""
+        """If statistic_fn returns NaN for some resamples, the wrapper
+        should not crash. CI bounds may themselves be NaN because
+        numpy.percentile propagates NaN from the bootstrap distribution."""
 
         def sometimes_nan(arr: np.ndarray) -> float:
             """Return NaN if the first element is negative."""
