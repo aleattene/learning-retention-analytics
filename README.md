@@ -1,7 +1,7 @@
 # Learning Retention Analytics 🇬🇧 [🇮🇹](README_IT.md)
 
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
-[![Lint & Format](https://github.com/aleattene/learning-retention-analytics/actions/workflows/lint.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/lint.yml)
+[![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
 [![codecov](https://codecov.io/gh/aleattene/learning-retention-analytics/graph/badge.svg?token=LS2ASS9Z6K)](https://codecov.io/gh/aleattene/learning-retention-analytics)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -26,6 +26,8 @@ Online education platforms face 40-60% drop-out rates. Understanding
 **where**, **when**, and **why** students disengage is the foundation
 for any retention strategy, whether in EdTech, SaaS subscriptions,
 or fitness app engagement.
+
+> **Dashboard**: [Looker Studio](#) *(coming soon)*
 
 ---
 
@@ -177,6 +179,39 @@ The Open University (UK).
 > Open University Learning Analytics dataset.
 > *Scientific Data*, 4, 170171.
 > Licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+---
+
+## Key Findings
+
+The full analysis is available in the [Executive Report](reports/REPORT.md).
+In summary:
+
+- **BQ1**: roughly 1 in 3 enrollments ends in explicit withdrawal; dropout
+  clusters around assessment deadlines and grade releases
+- **BQ2**: all 8 early behavioral signals (first 28 days) are significantly
+  associated with dropout; active days and total clicks dominate the effect
+  size ranking
+- **BQ3**: behavior predicts outcome far more strongly than demographics;
+  within every education level, high engagement beats low engagement
+- **BQ4**: completion rates range from 37% to 71% across the 7 modules;
+  suggestive patterns with assessment density, but n = 7 prevents inferential
+  conclusions
+- **BQ5**: three behavior-based interventions (ghost activation, assessment
+  checkpoint, week-3 re-engagement) cover the majority of at-risk students
+
+---
+
+## Documentation
+
+| Document | Content |
+|----------|---------|
+| [Executive Report](reports/REPORT.md) | Full BQ1–BQ5 analysis with figures and numbers |
+| [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs |
+| [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness |
+| [Cloud Migration](docs/MIGRATION.md) | DuckDB → BigQuery path, gaps and checklist |
+| [ADR](docs/ADR.md) | 7 architectural decisions with rationale |
+| [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions |
 
 ---
 
