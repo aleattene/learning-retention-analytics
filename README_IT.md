@@ -27,7 +27,7 @@ Le piattaforme di formazione online registrano tassi di abbandono del
 disimpegnano è la base di qualsiasi strategia di retention, che si
 tratti di EdTech, abbonamenti SaaS o app per il fitness.
 
-> **Dashboard**: [Looker Studio](#) *(in arrivo)*
+> **Dashboard**: Looker Studio *(in arrivo)*
 
 ---
 
@@ -207,7 +207,7 @@ In sintesi:
 
 | Documento | Contenuto |
 |-----------|-----------|
-| [Report Esecutivo](reports/REPORT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
+| [Report Esecutivo](reports/REPORT_IT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
 | [Metodologia](docs/METHODOLOGY_IT.md) | Approccio statistico, scelte progettuali, trade-off |
 | [Trasferibilità](docs/TRANSFERABILITY_IT.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
 | [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso DuckDB → BigQuery, gap e checklist |

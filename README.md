@@ -27,7 +27,7 @@ Online education platforms face 40-60% drop-out rates. Understanding
 for any retention strategy, whether in EdTech, SaaS subscriptions,
 or fitness app engagement.
 
-> **Dashboard**: [Looker Studio](#) *(coming soon)*
+> **Dashboard**: Looker Studio *(coming soon)*
 
 ---
 
