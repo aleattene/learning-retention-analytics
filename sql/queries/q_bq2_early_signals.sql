@@ -44,29 +44,41 @@ LEFT JOIN v_engagement_early ee
     AND se.code_presentation = ee.code_presentation
 
 -- Subquery: get the score and submission day of each student's first assessment
+-- Uses subquery + WHERE rn = 1 instead of QUALIFY (non-ANSI).
+-- QUALIFY is supported by DuckDB/BigQuery/Snowflake but not by PostgreSQL,
+-- MySQL, or SQL Server. This pattern is portable to all ANSI-compliant engines.
 LEFT JOIN (
     SELECT
-        sa.id_student,
-        a.code_module,
-        a.code_presentation,
-        -- FIRST_VALUE plus QUALIFY ROW_NUMBER() = 1 gets the first assessment
-        -- score ordered by submission date, without using DuckDB-specific ARG_MIN
-        FIRST_VALUE(sa.score) OVER (
-            PARTITION BY sa.id_student, a.code_module, a.code_presentation
-            ORDER BY sa.date_submitted
-        ) AS first_score,
-        FIRST_VALUE(sa.date_submitted) OVER (
-            PARTITION BY sa.id_student, a.code_module, a.code_presentation
-            ORDER BY sa.date_submitted
-        ) AS first_submit_day
-    FROM studentAssessment sa
-    JOIN assessments a ON sa.id_assessment = a.id_assessment
-    -- Only assessments due within the first 28 days
-    WHERE a.date <= 28
-    QUALIFY ROW_NUMBER() OVER (
-        PARTITION BY sa.id_student, a.code_module, a.code_presentation
-        ORDER BY sa.date_submitted
-    ) = 1
+        id_student,
+        code_module,
+        code_presentation,
+        first_score,
+        first_submit_day
+    FROM (
+        SELECT
+            sa.id_student,
+            a.code_module,
+            a.code_presentation,
+            -- FIRST_VALUE gets the first assessment score ordered by submission date,
+            -- without using DuckDB-specific ARG_MIN
+            FIRST_VALUE(sa.score) OVER (
+                PARTITION BY sa.id_student, a.code_module, a.code_presentation
+                ORDER BY sa.date_submitted
+            ) AS first_score,
+            FIRST_VALUE(sa.date_submitted) OVER (
+                PARTITION BY sa.id_student, a.code_module, a.code_presentation
+                ORDER BY sa.date_submitted
+            ) AS first_submit_day,
+            ROW_NUMBER() OVER (
+                PARTITION BY sa.id_student, a.code_module, a.code_presentation
+                ORDER BY sa.date_submitted
+            ) AS rn
+        FROM studentAssessment sa
+        JOIN assessments a ON sa.id_assessment = a.id_assessment
+        -- Only assessments due within the first 28 days
+        WHERE a.date <= 28
+    ) ranked
+    WHERE rn = 1
 ) first_assess
     ON se.id_student = first_assess.id_student
     AND se.code_module = first_assess.code_module
