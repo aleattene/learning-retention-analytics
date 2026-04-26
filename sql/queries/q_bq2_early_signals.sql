@@ -59,16 +59,10 @@ LEFT JOIN (
             sa.id_student,
             a.code_module,
             a.code_presentation,
-            -- FIRST_VALUE gets the first assessment score ordered by submission date,
-            -- without using DuckDB-specific ARG_MIN
-            FIRST_VALUE(sa.score) OVER (
-                PARTITION BY sa.id_student, a.code_module, a.code_presentation
-                ORDER BY sa.date_submitted
-            ) AS first_score,
-            FIRST_VALUE(sa.date_submitted) OVER (
-                PARTITION BY sa.id_student, a.code_module, a.code_presentation
-                ORDER BY sa.date_submitted
-            ) AS first_submit_day,
+            -- On the rn = 1 row these are already the first-submitted values,
+            -- so direct column access replaces the redundant FIRST_VALUE windows
+            sa.score AS first_score,
+            sa.date_submitted AS first_submit_day,
             ROW_NUMBER() OVER (
                 PARTITION BY sa.id_student, a.code_module, a.code_presentation
                 ORDER BY sa.date_submitted

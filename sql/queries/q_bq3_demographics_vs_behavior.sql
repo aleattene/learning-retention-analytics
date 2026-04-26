@@ -55,9 +55,11 @@ LEFT JOIN v_engagement_early ee
     AND se.code_module = ee.code_module
     AND se.code_presentation = ee.code_presentation
 
--- Same first-assessment subquery as BQ2
--- Uses subquery + WHERE rn = 1 instead of QUALIFY (non-ANSI).
--- Portable to all ANSI-compliant engines (see q_bq2 for rationale).
+-- Same first-assessment selection pattern as BQ2, but this query only
+-- returns first_score (not first_submit_day) because BQ3 only needs the
+-- first assessment score/submission signal. Uses subquery + WHERE rn = 1
+-- instead of QUALIFY (non-ANSI), portable to all ANSI-compliant engines
+-- (see q_bq2 for full rationale).
 LEFT JOIN (
     SELECT
         id_student,
@@ -69,10 +71,9 @@ LEFT JOIN (
             sa.id_student,
             a.code_module,
             a.code_presentation,
-            FIRST_VALUE(sa.score) OVER (
-                PARTITION BY sa.id_student, a.code_module, a.code_presentation
-                ORDER BY sa.date_submitted
-            ) AS first_score,
+            -- On the rn = 1 row sa.score is already the first-submitted score,
+            -- so direct column access replaces the redundant FIRST_VALUE window
+            sa.score AS first_score,
             ROW_NUMBER() OVER (
                 PARTITION BY sa.id_student, a.code_module, a.code_presentation
                 ORDER BY sa.date_submitted
