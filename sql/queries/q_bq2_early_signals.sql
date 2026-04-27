@@ -46,7 +46,8 @@ LEFT JOIN v_engagement_early ee
 -- Subquery: get the score and submission day of each student's first assessment
 -- Uses subquery + WHERE rn = 1 instead of QUALIFY (non-ANSI).
 -- QUALIFY is supported by DuckDB/BigQuery/Snowflake but not by PostgreSQL,
--- MySQL, or SQL Server. This pattern is portable to all ANSI-compliant engines.
+-- MySQL, or SQL Server. This pattern is portable to engines that support
+-- standard window functions such as ROW_NUMBER() (SQL:2003+).
 LEFT JOIN (
     SELECT
         id_student,

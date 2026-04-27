@@ -58,7 +58,8 @@ LEFT JOIN v_engagement_early ee
 -- Same first-assessment selection pattern as BQ2, but this query only
 -- returns first_score (not first_submit_day) because BQ3 only needs the
 -- first assessment score/submission signal. Uses subquery + WHERE rn = 1
--- instead of QUALIFY (non-ANSI), portable to all ANSI-compliant engines
+-- instead of QUALIFY (non-ANSI), portable to engines that support
+-- standard window functions such as ROW_NUMBER() (SQL:2003+)
 -- (see q_bq2 for full rationale).
 LEFT JOIN (
     SELECT
