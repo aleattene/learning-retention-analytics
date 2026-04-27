@@ -55,23 +55,35 @@ LEFT JOIN v_engagement_early ee
     AND se.code_module = ee.code_module
     AND se.code_presentation = ee.code_presentation
 
--- Same first-assessment subquery as BQ2
+-- Same first-assessment selection pattern as BQ2, but this query only
+-- returns first_score (not first_submit_day) because BQ3 only needs the
+-- first assessment score/submission signal. Uses subquery + WHERE rn = 1
+-- instead of QUALIFY (non-ANSI), portable to engines that support
+-- standard window functions such as ROW_NUMBER() (SQL:2003+)
+-- (see q_bq2 for full rationale).
 LEFT JOIN (
     SELECT
-        sa.id_student,
-        a.code_module,
-        a.code_presentation,
-        FIRST_VALUE(sa.score) OVER (
-            PARTITION BY sa.id_student, a.code_module, a.code_presentation
-            ORDER BY sa.date_submitted
-        ) AS first_score
-    FROM studentAssessment sa
-    JOIN assessments a ON sa.id_assessment = a.id_assessment
-    WHERE a.date <= 28
-    QUALIFY ROW_NUMBER() OVER (
-        PARTITION BY sa.id_student, a.code_module, a.code_presentation
-        ORDER BY sa.date_submitted
-    ) = 1
+        id_student,
+        code_module,
+        code_presentation,
+        first_score
+    FROM (
+        SELECT
+            sa.id_student,
+            a.code_module,
+            a.code_presentation,
+            -- On the rn = 1 row sa.score is already the first-submitted score,
+            -- so direct column access replaces the redundant FIRST_VALUE window
+            sa.score AS first_score,
+            ROW_NUMBER() OVER (
+                PARTITION BY sa.id_student, a.code_module, a.code_presentation
+                ORDER BY sa.date_submitted
+            ) AS rn
+        FROM studentAssessment sa
+        JOIN assessments a ON sa.id_assessment = a.id_assessment
+        WHERE a.date <= 28
+    ) ranked
+    WHERE rn = 1
 ) first_assess
     ON se.id_student = first_assess.id_student
     AND se.code_module = first_assess.code_module

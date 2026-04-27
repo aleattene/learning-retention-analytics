@@ -170,6 +170,32 @@ class TestBQ2EarlySignals:
         assert min_dec >= 1, f"engagement_decile_in_course went below 1: {min_dec}"
         assert max_dec <= 10, f"engagement_decile_in_course exceeded 10: {max_dec}"
 
+    def test_first_assessment_populated(
+        self, db_conn: duckdb.DuckDBPyConnection
+    ) -> None:
+        """At least some students should have first_score populated.
+
+        Validates that the first-assessment subquery (ROW_NUMBER rn=1
+        pattern) actually returns data when sample assessments include
+        entries with date <= 28.
+        """
+        df: pd.DataFrame = _run_query_file("q_bq2_early_signals.sql", db_conn)
+
+        n_with_score: int = df["first_score"].notna().sum()
+        assert n_with_score > 0, (
+            "No students have first_score — first-assessment subquery "
+            "returned no rows (check sample data has assessments with date <= 28)"
+        )
+
+    def test_first_score_bounded(self, db_conn: duckdb.DuckDBPyConnection) -> None:
+        """first_score, when not NULL, must be between 0 and 100."""
+        df: pd.DataFrame = _run_query_file("q_bq2_early_signals.sql", db_conn)
+
+        scores: pd.Series = df["first_score"].dropna()
+        if len(scores) > 0:
+            assert scores.min() >= 0, f"first_score below 0: {scores.min()}"
+            assert scores.max() <= 100, f"first_score above 100: {scores.max()}"
+
 
 # ===================================================================
 # BQ3 — q_bq3_demographics_vs_behavior
@@ -286,6 +312,56 @@ class TestBQ3DemographicsVsBehavior:
         assert len(has_decile_zero_days) == 0, (
             f"Found {len(has_decile_zero_days)} rows with a decile rank "
             f"but active_days_first_28 = 0"
+        )
+
+    def test_first_assessment_populated(
+        self, db_conn: duckdb.DuckDBPyConnection
+    ) -> None:
+        """At least some students should have submitted_first_assessment=1.
+
+        Validates that the first-assessment subquery (ROW_NUMBER rn=1
+        pattern) returns data when sample assessments include entries
+        with date <= 28.
+        """
+        df: pd.DataFrame = _run_query_file(
+            "q_bq3_demographics_vs_behavior.sql", db_conn
+        )
+
+        n_submitted: int = (df["submitted_first_assessment"] == 1).sum()
+        assert n_submitted > 0, (
+            "No students have submitted_first_assessment=1 — "
+            "first-assessment subquery returned no rows "
+            "(check sample data has assessments with date <= 28)"
+        )
+
+    def test_first_score_consistent_with_submitted_flag(
+        self, db_conn: duckdb.DuckDBPyConnection
+    ) -> None:
+        """submitted_first_assessment=1 iff first_score IS NOT NULL.
+
+        The CASE WHEN in BQ3 sets the flag to 1 when first_score is
+        not NULL, so these two columns must always agree.
+        """
+        df: pd.DataFrame = _run_query_file(
+            "q_bq3_demographics_vs_behavior.sql", db_conn
+        )
+
+        # Flag=1 but score is NULL — should never happen
+        flag_but_no_score: pd.DataFrame = df[
+            (df["submitted_first_assessment"] == 1) & df["first_score"].isna()
+        ]
+        assert len(flag_but_no_score) == 0, (
+            f"Found {len(flag_but_no_score)} rows with submitted_first_assessment=1 "
+            f"but NULL first_score"
+        )
+
+        # Score exists but flag=0 — should never happen
+        score_but_no_flag: pd.DataFrame = df[
+            (df["submitted_first_assessment"] == 0) & df["first_score"].notna()
+        ]
+        assert len(score_but_no_flag) == 0, (
+            f"Found {len(score_but_no_flag)} rows with first_score NOT NULL "
+            f"but submitted_first_assessment=0"
         )
 
     def test_row_count_matches_student_enriched(
