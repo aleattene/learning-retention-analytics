@@ -158,7 +158,8 @@ class TestMarkdownCellsTranslated:
             if en_cell["cell_type"] != "markdown":
                 continue
             n_markdown += 1
-            if _cell_source(en_cell) != _cell_source(it_cell):
+            # strip() so whitespace-only diffs don't count as translated
+            if _cell_source(en_cell).strip() != _cell_source(it_cell).strip():
                 n_different += 1
 
         # Guard: there must be at least one markdown cell
