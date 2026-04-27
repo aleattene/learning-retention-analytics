@@ -103,7 +103,9 @@ class TestCodeCellsIdentical:
         en_nb = _load_notebook(EN_DIR / nb_name)
         it_nb = _load_notebook(IT_DIR / nb_name)
 
-        for i, (en_cell, it_cell) in enumerate(zip(en_nb["cells"], it_nb["cells"])):
+        for i, (en_cell, it_cell) in enumerate(
+            zip(en_nb["cells"], it_nb["cells"], strict=True)
+        ):
             if en_cell["cell_type"] != "code":
                 continue
             en_src = _cell_source(en_cell)
@@ -152,7 +154,7 @@ class TestMarkdownCellsTranslated:
         n_markdown = 0
         n_different = 0
 
-        for en_cell, it_cell in zip(en_nb["cells"], it_nb["cells"]):
+        for en_cell, it_cell in zip(en_nb["cells"], it_nb["cells"], strict=True):
             if en_cell["cell_type"] != "markdown":
                 continue
             n_markdown += 1
