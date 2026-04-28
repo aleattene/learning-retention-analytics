@@ -65,7 +65,7 @@ class TestITNotebookExists:
     def test_it_notebook_exists(self, nb_name: str) -> None:
         it_path = IT_DIR / nb_name
         assert (
-            it_path.exists()
+            it_path.is_file()
         ), f"Italian notebook missing: {it_path.relative_to(PROJECT_ROOT)}"
 
 
