@@ -225,6 +225,8 @@ CLAUDE*.md
 PROJECT_SPEC.md
 TODO*.md
 SKILLS*.md
+HANDOFF_PROMPT.md
+ROADMAP.md
 ADR*.md
 docs/
 *.parquet
