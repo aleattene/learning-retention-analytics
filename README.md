@@ -13,10 +13,11 @@
 
 A **product analytics case study** that analyzes student retention and
 drop-out in online education using the
-[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset),
-~32,000 students, 7 courses, complete behavioral clickstream.
+[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset):
+32,593 enrollments by 28,785 distinct students, 7 courses, complete
+behavioral clickstream.
 
-The project follows a **SQL - driven analytical pipeline**: DuckDB as a
+The project follows a **SQL-driven analytical pipeline**: DuckDB as a
 local-first analytical database, descriptive and inferential statistics,
 and a Looker Studio dashboard.
 
@@ -75,7 +76,7 @@ Every analytical pattern in this project is portable to other domains:
 
 ```
 project_root/
-├── run_pipeline.py                     # Entrypoint — orchestrates ETL
+├── run_pipeline.py                     # Entrypoint: orchestrates ETL
 ├── src/
 │   ├── config.py                       # Paths, constants, env vars
 │   ├── db/connection.py                # DB abstraction (DuckDB now, BQ later)
@@ -159,8 +160,8 @@ pytest tests/test_smoke.py -v
 ## Dataset
 
 The [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset)
-contains data about ~32,000 students across 7 course presentations at
-The Open University (UK).
+contains 32,593 course enrollments by 28,785 distinct students across
+7 modules (22 presentations) at The Open University (UK).
 
 | Table | Description | Key columns |
 |-------|-------------|-------------|
@@ -172,8 +173,8 @@ The Open University (UK).
 | vle | VLE resource metadata | activity_type |
 | courses | Course metadata | module_presentation_length |
 
-**Target variable**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn}
-— binarized as Completed (Pass + Distinction) vs Not completed (Fail + Withdrawn).
+**Target variable**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},
+binarized as Completed (Pass + Distinction) vs Not completed (Fail + Withdrawn).
 
 > **Citation**: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017).
 > Open University Learning Analytics dataset.
@@ -190,8 +191,8 @@ In summary:
 - **BQ1**: roughly 1 in 3 enrollments ends in explicit withdrawal; dropout
   clusters around assessment deadlines and grade releases
 - **BQ2**: all 8 early behavioral signals (first 28 days) are significantly
-  associated with dropout; active days and total clicks dominate the effect
-  size ranking
+  associated with dropout; engagement volume (engagement decile, active days,
+  total clicks) dominates the effect size ranking
 - **BQ3**: behavior predicts outcome far more strongly than demographics;
   within every education level, high engagement beats low engagement
 - **BQ4**: completion rates range from 37% to 71% across the 7 modules;
@@ -209,7 +210,7 @@ In summary:
 | [Executive Report](reports/REPORT.md) | Full BQ1–BQ5 analysis with figures and numbers |
 | [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs |
 | [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness |
-| [Cloud Migration](docs/MIGRATION.md) | DuckDB → BigQuery path, gaps and checklist |
+| [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist |
 | [ADR](docs/ADR.md) | 7 architectural decisions with rationale |
 | [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions |
 

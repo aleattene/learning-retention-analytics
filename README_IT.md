@@ -13,8 +13,9 @@
 
 Un **case study di product analytics** che analizza la retention e
 l'abbandono degli studenti nella formazione online, utilizzando
-l'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset),
-~32.000 studenti, 7 corsi, clickstream comportamentale completo.
+l'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset):
+32.593 iscrizioni di 28.785 studenti distinti, 7 corsi, clickstream
+comportamentale completo.
 
 Il progetto segue una **pipeline analitica SQL-driven**: DuckDB come
 database analitico locale, statistica descrittiva e inferenziale, e una
@@ -61,7 +62,7 @@ Ogni pattern analitico di questo progetto è portabile ad altri domini:
 | Livello | Tecnologia | Motivazione |
 |---------|------------|-------------|
 | DB analitico | **DuckDB** (local-first) | Costo zero, SQL-first, percorso di migrazione a BigQuery |
-| Dialetto SQL | Solo **ANSI SQL** | Nessuna sintassi DuckDB-specifica — portabile su cloud |
+| Dialetto SQL | Solo **ANSI SQL** | Nessuna sintassi DuckDB-specifica, portabile su cloud |
 | Linguaggio | **Python 3.13+** | Orchestrazione pipeline, statistica, visualizzazione |
 | Statistica | **SciPy + statsmodels** | t-test, chi-quadrato, intervalli di confidenza, effect size |
 | Visualizzazione | **Matplotlib + Seaborn** | Grafici di qualità pubblicabile |
@@ -75,7 +76,7 @@ Ogni pattern analitico di questo progetto è portabile ad altri domini:
 
 ```
 project_root/
-├── run_pipeline.py                     # Entrypoint — orchestra l'ETL
+├── run_pipeline.py                     # Entrypoint: orchestra l'ETL
 ├── src/
 │   ├── config.py                       # Path, costanti, variabili d'ambiente
 │   ├── db/connection.py                # Astrazione DB (DuckDB ora, BQ in futuro)
@@ -159,8 +160,8 @@ pytest tests/test_smoke.py -v
 ## Dataset
 
 L'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset)
-contiene dati su ~32.000 studenti distribuiti su 7 presentazioni di corsi
-presso la Open University (UK).
+contiene 32.593 iscrizioni ai corsi di 28.785 studenti distinti, distribuite
+su 7 moduli (22 presentazioni) presso la Open University (UK).
 
 | Tabella | Descrizione | Colonne chiave |
 |---------|-------------|----------------|
@@ -172,8 +173,8 @@ presso la Open University (UK).
 | vle | Metadati risorse VLE | activity_type |
 | courses | Metadati dei corsi | module_presentation_length |
 
-**Variabile target**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn}
-— binarizzata come Completato (Pass + Distinction) vs Non completato (Fail + Withdrawn).
+**Variabile target**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},
+binarizzata come Completato (Pass + Distinction) vs Non completato (Fail + Withdrawn).
 
 > **Citazione**: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017).
 > Open University Learning Analytics dataset.
@@ -190,8 +191,8 @@ In sintesi:
 - **BQ1**: circa 1 iscrizione su 3 termina con il ritiro esplicito; il dropout
   si concentra intorno a scadenze di valutazione e rilascio voti
 - **BQ2**: tutti gli 8 segnali comportamentali precoci (primi 28 giorni) sono
-  significativamente associati all'abbandono; giorni attivi e click totali
-  dominano il ranking per effect size
+  significativamente associati all'abbandono; il volume di engagement (decile
+  di engagement, giorni attivi, click totali) domina il ranking per effect size
 - **BQ3**: il comportamento è un predittore molto più forte della demografia;
   in ogni livello di istruzione, l'engagement alto batte l'engagement basso
 - **BQ4**: i tassi di completamento variano dal 37% al 71% tra i 7 moduli;
@@ -210,7 +211,7 @@ In sintesi:
 | [Report Esecutivo](reports/REPORT_IT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
 | [Metodologia](docs/METHODOLOGY_IT.md) | Approccio statistico, scelte progettuali, trade-off |
 | [Trasferibilità](docs/TRANSFERABILITY_IT.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
-| [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso DuckDB → BigQuery, gap e checklist |
+| [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso da DuckDB a BigQuery, gap e checklist |
 | [ADR](docs/ADR_IT.md) | 7 decisioni architetturali con razionale |
 | [Testing](docs/TESTING_IT.md) | Architettura di test, strategia e decisioni |
 
