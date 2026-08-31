@@ -17,7 +17,7 @@ drop-out in online education using the
 32,593 enrollments by 28,785 distinct students, 7 courses, complete
 behavioral clickstream.
 
-The project follows a **SQL - driven analytical pipeline**: DuckDB as a
+The project follows a **SQL-driven analytical pipeline**: DuckDB as a
 local-first analytical database, descriptive and inferential statistics,
 and a Looker Studio dashboard.
 
@@ -76,7 +76,7 @@ Every analytical pattern in this project is portable to other domains:
 
 ```
 project_root/
-├── run_pipeline.py                     # Entrypoint — orchestrates ETL
+├── run_pipeline.py                     # Entrypoint: orchestrates ETL
 ├── src/
 │   ├── config.py                       # Paths, constants, env vars
 │   ├── db/connection.py                # DB abstraction (DuckDB now, BQ later)
@@ -173,8 +173,8 @@ contains 32,593 course enrollments by 28,785 distinct students across
 | vle | VLE resource metadata | activity_type |
 | courses | Course metadata | module_presentation_length |
 
-**Target variable**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn}
-— binarized as Completed (Pass + Distinction) vs Not completed (Fail + Withdrawn).
+**Target variable**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},
+binarized as Completed (Pass + Distinction) vs Not completed (Fail + Withdrawn).
 
 > **Citation**: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017).
 > Open University Learning Analytics dataset.
@@ -210,7 +210,7 @@ In summary:
 | [Executive Report](reports/REPORT.md) | Full BQ1–BQ5 analysis with figures and numbers |
 | [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs |
 | [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness |
-| [Cloud Migration](docs/MIGRATION.md) | DuckDB → BigQuery path, gaps and checklist |
+| [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist |
 | [ADR](docs/ADR.md) | 7 architectural decisions with rationale |
 | [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions |
 

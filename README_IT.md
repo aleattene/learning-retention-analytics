@@ -62,7 +62,7 @@ Ogni pattern analitico di questo progetto è portabile ad altri domini:
 | Livello | Tecnologia | Motivazione |
 |---------|------------|-------------|
 | DB analitico | **DuckDB** (local-first) | Costo zero, SQL-first, percorso di migrazione a BigQuery |
-| Dialetto SQL | Solo **ANSI SQL** | Nessuna sintassi DuckDB-specifica — portabile su cloud |
+| Dialetto SQL | Solo **ANSI SQL** | Nessuna sintassi DuckDB-specifica, portabile su cloud |
 | Linguaggio | **Python 3.13+** | Orchestrazione pipeline, statistica, visualizzazione |
 | Statistica | **SciPy + statsmodels** | t-test, chi-quadrato, intervalli di confidenza, effect size |
 | Visualizzazione | **Matplotlib + Seaborn** | Grafici di qualità pubblicabile |
@@ -76,7 +76,7 @@ Ogni pattern analitico di questo progetto è portabile ad altri domini:
 
 ```
 project_root/
-├── run_pipeline.py                     # Entrypoint — orchestra l'ETL
+├── run_pipeline.py                     # Entrypoint: orchestra l'ETL
 ├── src/
 │   ├── config.py                       # Path, costanti, variabili d'ambiente
 │   ├── db/connection.py                # Astrazione DB (DuckDB ora, BQ in futuro)
@@ -173,8 +173,8 @@ su 7 moduli (22 presentazioni) presso la Open University (UK).
 | vle | Metadati risorse VLE | activity_type |
 | courses | Metadati dei corsi | module_presentation_length |
 
-**Variabile target**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn}
-— binarizzata come Completato (Pass + Distinction) vs Non completato (Fail + Withdrawn).
+**Variabile target**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},
+binarizzata come Completato (Pass + Distinction) vs Non completato (Fail + Withdrawn).
 
 > **Citazione**: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017).
 > Open University Learning Analytics dataset.
@@ -211,7 +211,7 @@ In sintesi:
 | [Report Esecutivo](reports/REPORT_IT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
 | [Metodologia](docs/METHODOLOGY_IT.md) | Approccio statistico, scelte progettuali, trade-off |
 | [Trasferibilità](docs/TRANSFERABILITY_IT.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
-| [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso DuckDB → BigQuery, gap e checklist |
+| [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso da DuckDB a BigQuery, gap e checklist |
 | [ADR](docs/ADR_IT.md) | 7 decisioni architetturali con razionale |
 | [Testing](docs/TESTING_IT.md) | Architettura di test, strategia e decisioni |
 
