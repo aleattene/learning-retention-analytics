@@ -65,8 +65,9 @@ date dei cliff event.
 *Cliff event rilevati tramite soglia p95. I picchi di abbandono più grandi in un singolo
 giorno corrispondono a tappe del corso.*
 
-Una quota misurabile di ritiri avviene **prima ancora dell'inizio del corso** (giorno di
-dropout < 0). Questi ritiri pre-corso rappresentano puro churn di registrazione — studenti
+Oltre un quarto dei ritiri espliciti (26,6%, 2.678 su 10.072) avviene **prima ancora
+dell'inizio del corso** (giorno di dropout < 0). Questi ritiri pre-corso rappresentano
+puro churn di registrazione — studenti
 che si sono iscritti ma non hanno mai fruito di alcun contenuto. Si tratta di un problema
 di attivazione, non accademico.
 
@@ -84,7 +85,8 @@ Sapere *quando* gli studenti se ne vanno solleva la domanda successiva: possiamo
 > **Risultato chiave:** Tutte le 8 metriche di engagement precoce testate sono
 > significativamente associate all'abbandono dopo correzione per confronti multipli
 > (8/8 dopo Bonferroni e Benjamini-Hochberg). I predittori più forti sono le metriche
-> di volume dell'engagement — giorni attivi e click totali nei primi 28 giorni.
+> di volume dell'engagement: decile di engagement intra-corso, giorni attivi e click
+> totali nei primi 28 giorni.
 
 Utilizzando solo i dati dei primi 28 giorni di iscrizione, abbiamo testato 8 segnali
 comportamentali per la loro associazione con il completamento finale. L'effect size
@@ -92,9 +94,11 @@ comportamentali per la loro associazione con il completamento finale. L'effect s
 ~32K osservazioni la significatività è facile da raggiungere.
 
 Il **forest plot** sottostante classifica tutti i segnali per effect size assoluto.
-Le metriche di volume dell'engagement (giorni attivi, click totali, decile di engagement
-intra-corso) dominano la classifica, seguite dall'ultimo giorno attivo e dall'intensità
-media dei click.
+Le metriche di volume dell'engagement dominano la classifica: decile di engagement
+intra-corso (d = 0,97), giorni attivi (d = 0,90) e click totali (d = 0,63), seguiti
+dall'ultimo giorno attivo, dal punteggio della prima valutazione e dall'intensità media
+dei click (d tra 0,52 e 0,55; i segnali basati sulle valutazioni sono calcolati sulla
+sola sottopopolazione dei submitter).
 
 ![Forest plot degli effect size](figures/04_forest_plot_effect_sizes.png)
 
@@ -145,7 +149,8 @@ istruzione, fascia IMD, disabilità, regione) e 2 variabili demografiche numeric
 (tentativi precedenti, crediti studiati) contro l'esito di completamento. Tutte le 8 sono
 statisticamente significative dopo correzione Benjamini-Hochberg — ma i loro effect size
 sono uniformemente deboli. Il predittore demografico più forte (livello di istruzione
-più alto) ha una V di Cramér inferiore a **0,13**; tutti gli altri sono sotto **0,11**.
+più alto) raggiunge una V di Cramér di circa **0,15**; segue la fascia IMD con **0,13**,
+e tutte le altre variabili demografiche restano sotto **0,09**.
 
 Per contro, le variabili comportamentali (giorni attivi, click totali, submission
 valutazioni, intensità click) mostrano effect size diverse volte superiori. Il divario è
@@ -233,7 +238,8 @@ primi 28 giorni.
 | **Early disengager** | Attività nei giorni 0–14, zero nei giorni 15–28 | **2.213** (6,8%) | **77,8%** |
 
 Tutti e tre i segmenti mostrano tassi di non completamento molto superiori al baseline
-della piattaforma (~53%).
+della piattaforma (~53%). Gli studenti ghost completano appena nel 7,7% dei casi, contro
+una media di piattaforma del 47,2%.
 
 ### I tre interventi
 

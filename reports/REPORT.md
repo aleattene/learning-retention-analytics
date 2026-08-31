@@ -63,8 +63,8 @@ These are actionable: interventions can be timed to precede known cliff dates.
 *Cliff events detected via p95 threshold. The largest single-day dropout spikes
 correspond to course milestones.*
 
-A measurable share of withdrawals occur **before the course even starts** (dropout
-day < 0). These pre-course withdrawals represent pure registration churn — students
+More than a quarter of explicit withdrawals (26.6%, 2,678 of 10,072) occur **before
+the course even starts** (dropout day < 0). These pre-course withdrawals represent pure registration churn — students
 who enrolled but never experienced any content. This is an activation problem, not an
 academic one.
 
@@ -81,8 +81,8 @@ Knowing *when* students leave raises the next question: can we see it coming?
 
 > **Key finding:** All 8 early engagement metrics tested are significantly associated
 > with dropout after multiple comparison correction (8/8 after both Bonferroni and
-> Benjamini-Hochberg). The strongest predictors are engagement-volume metrics —
-> active days and total clicks in the first 28 days.
+> Benjamini-Hochberg). The strongest predictors are engagement-volume metrics:
+> within-course engagement decile, active days, and total clicks in the first 28 days.
 
 Using only the first 28 days of enrollment data, we tested 8 behavioral signals for
 their association with eventual completion. Effect size (Cohen's d) — not p-value — is
@@ -90,8 +90,10 @@ the primary ranking criterion, because with ~32K observations significance is ea
 achieve.
 
 The **forest plot** below ranks all signals by absolute effect size. Engagement-volume
-metrics (active days, total clicks, within-course engagement decile) dominate the
-ranking, followed by last active day and average click intensity.
+metrics dominate the ranking: within-course engagement decile (d = 0.97), active days
+(d = 0.90), and total clicks (d = 0.63), followed by last active day, first assessment
+score, and average click intensity (d between 0.52 and 0.55; assessment-based signals
+are computed on the submitter subpopulation only).
 
 ![Forest plot of effect sizes](figures/04_forest_plot_effect_sizes.png)
 
@@ -140,8 +142,8 @@ We tested 6 categorical demographic features (gender, age band, education level,
 band, disability, region) and 2 numeric demographic features (previous attempts, studied
 credits) against completion outcome. All 8 are statistically significant after
 Benjamini-Hochberg correction — but their effect sizes are uniformly weak. The strongest
-demographic predictor (highest education) has a Cramer's V below **0.13**; all others
-fall below **0.11**.
+demographic predictor (highest education) reaches a Cramer's V of approximately **0.15**;
+the IMD band follows at **0.13**, and all other demographic variables fall below **0.09**.
 
 By contrast, behavioral features (active days, total clicks, assessment submission,
 click intensity) show effect sizes several times larger. The gap is stark: behavioral
@@ -224,6 +226,7 @@ not demographics. All definitions use first-28-day behavioral data.
 | **Early disengagers** | Activity in days 0–14, zero in days 15–28 | **2,213** (6.8%) | **77.8%** |
 
 All three segments show non-completion rates far above the platform baseline (~53%).
+Ghost students complete at just 7.7%, against a platform average of 47.2%.
 
 ### The Three Interventions
 
