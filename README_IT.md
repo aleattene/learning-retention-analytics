@@ -13,8 +13,9 @@
 
 Un **case study di product analytics** che analizza la retention e
 l'abbandono degli studenti nella formazione online, utilizzando
-l'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset),
-~32.000 studenti, 7 corsi, clickstream comportamentale completo.
+l'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset):
+32.593 iscrizioni di 28.785 studenti distinti, 7 corsi, clickstream
+comportamentale completo.
 
 Il progetto segue una **pipeline analitica SQL-driven**: DuckDB come
 database analitico locale, statistica descrittiva e inferenziale, e una
@@ -159,8 +160,8 @@ pytest tests/test_smoke.py -v
 ## Dataset
 
 L'[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset)
-contiene dati su ~32.000 studenti distribuiti su 7 presentazioni di corsi
-presso la Open University (UK).
+contiene 32.593 iscrizioni ai corsi di 28.785 studenti distinti, distribuite
+su 7 moduli (22 presentazioni) presso la Open University (UK).
 
 | Tabella | Descrizione | Colonne chiave |
 |---------|-------------|----------------|
@@ -190,8 +191,8 @@ In sintesi:
 - **BQ1**: circa 1 iscrizione su 3 termina con il ritiro esplicito; il dropout
   si concentra intorno a scadenze di valutazione e rilascio voti
 - **BQ2**: tutti gli 8 segnali comportamentali precoci (primi 28 giorni) sono
-  significativamente associati all'abbandono; giorni attivi e click totali
-  dominano il ranking per effect size
+  significativamente associati all'abbandono; il volume di engagement (decile
+  di engagement, giorni attivi, click totali) domina il ranking per effect size
 - **BQ3**: il comportamento è un predittore molto più forte della demografia;
   in ogni livello di istruzione, l'engagement alto batte l'engagement basso
 - **BQ4**: i tassi di completamento variano dal 37% al 71% tra i 7 moduli;

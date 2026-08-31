@@ -13,8 +13,9 @@
 
 A **product analytics case study** that analyzes student retention and
 drop-out in online education using the
-[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset),
-~32,000 students, 7 courses, complete behavioral clickstream.
+[Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset):
+32,593 enrollments by 28,785 distinct students, 7 courses, complete
+behavioral clickstream.
 
 The project follows a **SQL - driven analytical pipeline**: DuckDB as a
 local-first analytical database, descriptive and inferential statistics,
@@ -159,8 +160,8 @@ pytest tests/test_smoke.py -v
 ## Dataset
 
 The [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset)
-contains data about ~32,000 students across 7 course presentations at
-The Open University (UK).
+contains 32,593 course enrollments by 28,785 distinct students across
+7 modules (22 presentations) at The Open University (UK).
 
 | Table | Description | Key columns |
 |-------|-------------|-------------|
@@ -190,8 +191,8 @@ In summary:
 - **BQ1**: roughly 1 in 3 enrollments ends in explicit withdrawal; dropout
   clusters around assessment deadlines and grade releases
 - **BQ2**: all 8 early behavioral signals (first 28 days) are significantly
-  associated with dropout; active days and total clicks dominate the effect
-  size ranking
+  associated with dropout; engagement volume (engagement decile, active days,
+  total clicks) dominates the effect size ranking
 - **BQ3**: behavior predicts outcome far more strongly than demographics;
   within every education level, high engagement beats low engagement
 - **BQ4**: completion rates range from 37% to 71% across the 7 modules;
