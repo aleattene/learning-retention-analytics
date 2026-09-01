@@ -1,8 +1,10 @@
-"""Tests for run_pipeline.py — CLI orchestrator.
+"""Tests for run_pipeline.py: CLI orchestrator.
 
 Validates argument parsing, step selection logic, and error propagation.
 All pipeline steps are mocked to test only the orchestration layer,
 not the actual ETL logic (which is tested in test_pipeline*.py).
+Leaving any step unmocked would open the real DuckDB file, which does
+not exist in CI (data/ is gitignored) and must never be touched by tests.
 """
 
 import logging
@@ -18,6 +20,7 @@ import pytest
 class TestArgumentParsing:
     """Verify CLI flags are parsed correctly and forwarded to steps."""
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -30,8 +33,9 @@ class TestArgumentParsing:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
-        """No arguments → all three steps run."""
+        """No arguments → all four steps run."""
         from run_pipeline import main
 
         with patch("sys.argv", ["run_pipeline"]):
@@ -40,7 +44,9 @@ class TestArgumentParsing:
         mock_ingest.assert_called_once()
         mock_transform.assert_called_once()
         mock_export.assert_called_once()
+        mock_stats.assert_called_once()
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -53,6 +59,7 @@ class TestArgumentParsing:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--step ingest → only ingest runs."""
         from run_pipeline import main
@@ -63,7 +70,9 @@ class TestArgumentParsing:
         mock_ingest.assert_called_once()
         mock_transform.assert_not_called()
         mock_export.assert_not_called()
+        mock_stats.assert_not_called()
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -76,6 +85,7 @@ class TestArgumentParsing:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--step transform → only transform runs."""
         from run_pipeline import main
@@ -86,7 +96,9 @@ class TestArgumentParsing:
         mock_ingest.assert_not_called()
         mock_transform.assert_called_once()
         mock_export.assert_not_called()
+        mock_stats.assert_not_called()
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -99,6 +111,7 @@ class TestArgumentParsing:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--step export → only export runs."""
         from run_pipeline import main
@@ -109,6 +122,33 @@ class TestArgumentParsing:
         mock_ingest.assert_not_called()
         mock_transform.assert_not_called()
         mock_export.assert_called_once()
+        mock_stats.assert_not_called()
+
+    @patch("run_pipeline.compute_stats")
+    @patch("run_pipeline.export")
+    @patch("run_pipeline.transform")
+    @patch("run_pipeline.ingest")
+    @patch("run_pipeline.log_environment")
+    @patch("run_pipeline.setup_logging")
+    def test_step_stats_runs_only_stats(
+        self,
+        mock_setup: MagicMock,
+        mock_env: MagicMock,
+        mock_ingest: MagicMock,
+        mock_transform: MagicMock,
+        mock_export: MagicMock,
+        mock_stats: MagicMock,
+    ) -> None:
+        """--step stats → only compute_stats runs."""
+        from run_pipeline import main
+
+        with patch("sys.argv", ["run_pipeline", "--step", "stats"]):
+            main()
+
+        mock_ingest.assert_not_called()
+        mock_transform.assert_not_called()
+        mock_export.assert_not_called()
+        mock_stats.assert_called_once()
 
     @patch("run_pipeline.log_environment")
     @patch("run_pipeline.setup_logging")
@@ -133,6 +173,7 @@ class TestArgumentParsing:
 class TestSampleFlag:
     """Verify --sample flag is forwarded correctly to ingest."""
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -145,6 +186,7 @@ class TestSampleFlag:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--sample → ingest(use_sample=True)."""
         from run_pipeline import main
@@ -154,6 +196,7 @@ class TestSampleFlag:
 
         mock_ingest.assert_called_once_with(use_sample=True)
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -166,6 +209,7 @@ class TestSampleFlag:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """No --sample → ingest(use_sample=False)."""
         from run_pipeline import main
@@ -184,6 +228,7 @@ class TestSampleFlag:
 class TestDebugFlag:
     """Verify --debug flag sets correct logging level."""
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -196,6 +241,7 @@ class TestDebugFlag:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--debug → setup_logging(level=logging.DEBUG)."""
         from run_pipeline import main
@@ -205,6 +251,7 @@ class TestDebugFlag:
 
         mock_setup.assert_called_once_with(level=logging.DEBUG)
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -217,6 +264,7 @@ class TestDebugFlag:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """No --debug → setup_logging(level=logging.INFO)."""
         from run_pipeline import main
@@ -283,6 +331,22 @@ class TestErrorPropagation:
             with pytest.raises(PermissionError, match="read-only"):
                 main()
 
+    @patch("run_pipeline.log_environment")
+    @patch("run_pipeline.setup_logging")
+    @patch("run_pipeline.compute_stats", side_effect=RuntimeError("stats failed"))
+    def test_stats_error_propagates(
+        self,
+        mock_stats: MagicMock,
+        mock_setup: MagicMock,
+        mock_env: MagicMock,
+    ) -> None:
+        """RuntimeError in compute_stats should propagate out of main()."""
+        from run_pipeline import main
+
+        with patch("sys.argv", ["run_pipeline", "--step", "stats"]):
+            with pytest.raises(RuntimeError, match="stats failed"):
+                main()
+
 
 # ===================================================================
 # Combined flags
@@ -292,6 +356,7 @@ class TestErrorPropagation:
 class TestCombinedFlags:
     """Verify that multiple flags work together."""
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -304,6 +369,7 @@ class TestCombinedFlags:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--sample --debug → sample=True + level=DEBUG."""
         from run_pipeline import main
@@ -314,6 +380,7 @@ class TestCombinedFlags:
         mock_setup.assert_called_once_with(level=logging.DEBUG)
         mock_ingest.assert_called_once_with(use_sample=True)
 
+    @patch("run_pipeline.compute_stats")
     @patch("run_pipeline.export")
     @patch("run_pipeline.transform")
     @patch("run_pipeline.ingest")
@@ -326,6 +393,7 @@ class TestCombinedFlags:
         mock_ingest: MagicMock,
         mock_transform: MagicMock,
         mock_export: MagicMock,
+        mock_stats: MagicMock,
     ) -> None:
         """--step ingest --sample → only ingest with sample=True."""
         from run_pipeline import main
@@ -336,3 +404,4 @@ class TestCombinedFlags:
         mock_ingest.assert_called_once_with(use_sample=True)
         mock_transform.assert_not_called()
         mock_export.assert_not_called()
+        mock_stats.assert_not_called()

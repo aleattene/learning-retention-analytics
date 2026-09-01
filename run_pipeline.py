@@ -6,6 +6,7 @@ Entry point for the entire analytical pipeline:
   python -m run_pipeline --step ingest      # single step only
   python -m run_pipeline --step transform   # single step only
   python -m run_pipeline --step export      # single step only
+  python -m run_pipeline --step stats       # single step only
 
 Each step is idempotent, so re-running the pipeline always produces
 a consistent result. The --sample flag is essential for CI and testing,
@@ -18,6 +19,7 @@ import logging
 from src.pipeline.step_01_ingest import ingest
 from src.pipeline.step_02_transform import transform
 from src.pipeline.step_03_export import export
+from src.pipeline.step_04_stats import compute_stats
 from src.utils.logging import setup_logging
 from src.utils.runtime import log_environment, step_timer
 
@@ -31,12 +33,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--step",
-        choices=["ingest", "transform", "export"],
+        choices=["ingest", "transform", "export", "stats"],
         default=None,
         help=(
             "Run a single pipeline step instead of the full pipeline. "
             "'transform' requires a previous 'ingest' or full pipeline run. "
-            "'export' requires a previous 'transform' or full pipeline run."
+            "'export' and 'stats' require a previous 'transform' or "
+            "full pipeline run."
         ),
     )
     parser.add_argument(
@@ -75,6 +78,10 @@ def main() -> None:
     if run_step in (None, "export"):
         with step_timer("Step 03 — Export"):
             export()
+
+    if run_step in (None, "stats"):
+        with step_timer("Step 04: Stats"):
+            compute_stats()
 
     logger.info("Pipeline complete")
 

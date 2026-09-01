@@ -50,7 +50,7 @@ modulo, presentazioni (coorti) diverse seguono traiettorie sostanzialmente simil
 suggerendo che è il design del corso, non la variazione casuale della coorte, a
 determinare la forma dell'abbandono.
 
-![Curve cumulative di abbandono per tutti i 7 corsi](figures/03_dropout_curves_overlaid.png)
+![Curve cumulative di abbandono per tutti i 7 corsi](../figures/03_dropout_curves_overlaid.png)
 
 *Le curve cumulative di abbandono mostrano profili temporali distinti per corso. Ogni linea
 rappresenta una presentazione del corso, colorata per modulo.*
@@ -60,7 +60,7 @@ I **cliff event**, giorni con un numero sproporzionatamente alto di ritiri (sopr
 dei voti. Questi sono azionabili: gli interventi possono essere programmati prima delle
 date dei cliff event.
 
-![Principali cliff event di abbandono](figures/03_dropout_cliffs.png)
+![Principali cliff event di abbandono](../figures/03_dropout_cliffs.png)
 
 *Cliff event rilevati tramite soglia p95. I picchi di abbandono più grandi in un singolo
 giorno corrispondono a tappe del corso.*
@@ -71,7 +71,7 @@ puro churn di registrazione: studenti che si sono iscritti ma non hanno mai frui
 di alcun contenuto. Si tratta di un problema
 di attivazione, non accademico.
 
-![Ritiri pre-corso per modulo](figures/03_precourse_withdrawals.png)
+![Ritiri pre-corso per modulo](../figures/03_precourse_withdrawals.png)
 
 *Ritiri pre-corso per modulo. Questi studenti necessitano di nudge di onboarding, non di
 supporto accademico.*
@@ -100,7 +100,7 @@ dall'ultimo giorno attivo, dal punteggio della prima valutazione e dall'intensit
 dei click (d tra 0,52 e 0,55; i segnali basati sulle valutazioni sono calcolati sulla
 sola sottopopolazione dei submitter).
 
-![Forest plot degli effect size](figures/04_forest_plot_effect_sizes.png)
+![Forest plot degli effect size](../figures/04_forest_plot_effect_sizes.png)
 
 *Tutti gli 8 segnali classificati per d di Cohen. I punti verdi indicano significatività
 dopo correzione Benjamini-Hochberg. Le linee di riferimento verticali segnano le soglie
@@ -114,7 +114,7 @@ sovrappongono. (Nota: BQ5 amplia questa definizione per includere attività quas
 cioè al massimo 1 giorno attivo e meno di 10 click, per catturare l'intero segmento a
 rischio ai fini del targeting degli interventi.)
 
-![Tasso di completamento ghost vs attivi](figures/04_ghost_vs_active_completion.png)
+![Tasso di completamento ghost vs attivi](../figures/04_ghost_vs_active_completion.png)
 
 *Gli studenti ghost (zero attività VLE nei primi 28 giorni) hanno tassi di completamento
 prossimi allo zero. Le barre di errore mostrano intervalli di confidenza bootstrap al 95%.*
@@ -123,7 +123,7 @@ La relazione dose-risposta è **monotonica**: più engagement predice costanteme
 completamento più alto, senza soglia né rendimenti decrescenti. Questo significa che il
 segnale è utile lungo tutto il suo range, non solo agli estremi.
 
-![Dose-risposta per i segnali principali](figures/04_top_signal_dose_response.png)
+![Dose-risposta per i segnali principali](../figures/04_top_signal_dose_response.png)
 
 *Tasso di completamento per quartile del segnale per i 3 predittori principali. La
 relazione è graduata, non binaria.*
@@ -157,7 +157,7 @@ valutazioni, intensità click) mostrano effect size diverse volte superiori. Il 
 netto: i segnali comportamentali predicono l'esito molto più fortemente di qualsiasi
 variabile demografica.
 
-![Confronto demografia vs comportamento](figures/05_demographics_vs_behavior_comparison.png)
+![Confronto demografia vs comportamento](../figures/05_demographics_vs_behavior_comparison.png)
 
 *Confronto diretto degli effect size demografici e comportamentali. Il divario è
 sostanziale: i segnali comportamentali sono costantemente più forti.*
@@ -169,7 +169,7 @@ studente con un livello di istruzione formale inferiore ma alto engagement ha pi
 probabilità di completare rispetto a uno studente altamente istruito che non interagisce
 con la piattaforma.
 
-![Interazione istruzione × engagement](figures/05_education_engagement_interaction.png)
+![Interazione istruzione × engagement](../figures/05_education_engagement_interaction.png)
 
 *All'interno di ogni livello di istruzione, il gap di engagement sovrasta il gap
 educativo. Il comportamento è il fattore determinante, non il background.*
@@ -193,7 +193,7 @@ Il design del corso stesso influenza i livelli di engagement?
 Il grafico di ranking sottostante mostra l'intera distribuzione. Il modulo AAA trattiene
 quasi tre quarti dei suoi studenti; il modulo CCC ne perde quasi due terzi.
 
-![Ranking completamento per corso](figures/06_course_completion_ranking.png)
+![Ranking completamento per corso](../figures/06_course_completion_ranking.png)
 
 *I tassi di completamento vanno dal 37,4% al 70,9% tra i 7 moduli OULAD.*
 
@@ -202,7 +202,7 @@ del corso (densità valutazioni, durata) e i tassi di completamento. Tuttavia, c
 qualsiasi correlazione è descrittiva, non inferenziale: la correlazione di Spearman
 richiede |rho| > 0,79 per la significatività a questa dimensione campionaria.
 
-![Design del corso vs completamento](figures/06_course_design_vs_completion.png)
+![Design del corso vs completamento](../figures/06_course_design_vs_completion.png)
 
 *La densità delle valutazioni e la durata del corso mostrano associazioni suggestive con
 il completamento. Ogni punto è un modulo (mediato sulle sue presentazioni).*
@@ -268,12 +268,12 @@ impatto non va sommato ingenuamente. Gli early disengager, per definizione, hann
 attività iniziale: si sovrappongono meno con i ghost, rendendo l'intervento 3 una leva
 indipendente che targetizza un failure mode diverso.
 
-![Matrice delle priorità](figures/07_priority_matrix.png)
+![Matrice delle priorità](../figures/07_priority_matrix.png)
 
 *Matrice priorità impatto-vs-costo. L'Attivazione Ghost è il chiaro quick win:
 segmento più grande, eccesso di non completamento più alto, costo più basso.*
 
-![Sovrapposizione dei segmenti](figures/07_segment_overlap.png)
+![Sovrapposizione dei segmenti](../figures/07_segment_overlap.png)
 
 *Analisi della sovrapposizione dei segmenti. Le barre grigie mostrano studenti
 appartenenti a più segmenti. La sovrapposizione ghost–non-submitter è sostanziale.*
