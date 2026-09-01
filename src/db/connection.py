@@ -1,4 +1,4 @@
-"""Database abstraction layer — DuckDB now, BigQuery later.
+"""Database abstraction layer: DuckDB now, BigQuery later.
 
 All database access in the project MUST go through this module.
 No direct duckdb.connect() calls elsewhere in the codebase.
@@ -38,7 +38,7 @@ def get_connection(
     duckdb.DuckDBPyConnection
     """
     if db_path is None:
-        # DuckDB does not support read_only on :memory: connections —
+        # DuckDB does not support read_only on :memory: connections;
         # the parameter is silently ignored. This is expected: in-memory
         # DBs are ephemeral test fixtures, not shared resources.
         logger.debug("Opening in-memory DuckDB connection")

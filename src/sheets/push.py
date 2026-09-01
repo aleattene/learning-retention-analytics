@@ -49,7 +49,7 @@ def _get_credentials_from_keychain() -> dict:
         SHEETS_KEYCHAIN_SERVICE, SHEETS_KEYCHAIN_ACCOUNT
     )
     if not raw:
-        # Generic error message — never reveal what we expected to find
+        # Generic error message: never reveal what we expected to find
         raise RuntimeError("Credentials not found in macOS Keychain.")
 
     try:

@@ -1,4 +1,4 @@
-"""Pipeline orchestrator — runs all ETL steps, or a single one via --step.
+"""Pipeline orchestrator: runs all ETL steps, or a single one via --step.
 
 Entry point for the entire analytical pipeline:
   python -m run_pipeline                    # all steps, full dataset
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 def main() -> None:
     """Parse arguments and run the full pipeline."""
     parser = argparse.ArgumentParser(
-        description="Learning Retention Analytics — ETL Pipeline"
+        description="Learning Retention Analytics: ETL Pipeline"
     )
     parser.add_argument(
         "--step",
@@ -62,21 +62,21 @@ def main() -> None:
     run_step: str | None = args.step
 
     logger.info(
-        "Pipeline starting — source: %s, step: %s",
+        "Pipeline starting (source: %s, step: %s)",
         "data_sample" if args.sample else "data/raw",
         run_step or "all",
     )
 
     if run_step in (None, "ingest"):
-        with step_timer("Step 01 — Ingest"):
+        with step_timer("Step 01: Ingest"):
             ingest(use_sample=args.sample)
 
     if run_step in (None, "transform"):
-        with step_timer("Step 02 — Transform"):
+        with step_timer("Step 02: Transform"):
             transform()
 
     if run_step in (None, "export"):
-        with step_timer("Step 03 — Export"):
+        with step_timer("Step 03: Export"):
             export()
 
     if run_step in (None, "stats"):

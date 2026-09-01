@@ -1,11 +1,11 @@
-"""Step 01 — Ingest OULAD CSV files into raw DuckDB tables.
+"""Step 01: Ingest OULAD CSV files into raw DuckDB tables.
 
 Reads the 7 OULAD CSV files from data/raw/ (or data_sample/) and loads
 them into DuckDB tables defined by sql/schema.sql.
 
 This step is idempotent: running it again will DROP and re-CREATE all tables,
 ensuring a clean state. This is acceptable because raw data is always
-available on disk as CSVs — the DuckDB tables are a derived artifact.
+available on disk as CSVs; the DuckDB tables are a derived artifact.
 """
 
 import logging

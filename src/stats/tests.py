@@ -1,4 +1,4 @@
-"""Statistical test wrappers — t-test, chi-square, effect sizes, confidence intervals.
+"""Statistical test wrappers: t-test, chi-square, effect sizes, confidence intervals.
 
 These wrappers standardize the interface for all statistical tests used
 in the project, ensuring consistent output format (test statistic, p-value,
@@ -71,7 +71,7 @@ def independent_t_test(
         Includes t-statistic, p-value, Cohen's d, and 95% CI for
         the difference in means.
     """
-    # Drop NaN values — missing data should not influence the test
+    # Drop NaN values: missing data should not influence the test
     g1: np.ndarray = np.asarray(group1, dtype=float)
     g2: np.ndarray = np.asarray(group2, dtype=float)
     g1 = g1[~np.isnan(g1)]
@@ -103,8 +103,8 @@ def independent_t_test(
     )
     # When pooled_std is zero both groups have zero variance (all values
     # identical within each group).  If the means also match, Cohen's d is
-    # genuinely 0.  If the means differ, the effect is theoretically infinite
-    # — returning 0.0 would silently hide a real difference.
+    # genuinely 0.  If the means differ, the effect is theoretically
+    # infinite; returning 0.0 would silently hide a real difference.
     if pooled_std == 0:
         mean_g1: float = float(np.mean(g1))
         mean_g2: float = float(np.mean(g2))
@@ -116,7 +116,7 @@ def independent_t_test(
         cohens_d = float((np.mean(g1) - np.mean(g2)) / pooled_std)
 
     # 95% CI for the difference in means using Welch-Satterthwaite
-    # degrees of freedom — matches the Welch t-test above instead of
+    # degrees of freedom, which matches the Welch t-test above instead of
     # the normal approximation (z=1.96), which undercovers for small samples
     mean_diff: float = float(np.mean(g1) - np.mean(g2))
     s1_sq_n: float = np.var(g1, ddof=1) / len(g1)
@@ -187,7 +187,7 @@ def chi_square_test(
     if observed.ndim != 2 or observed.shape[0] < 2 or observed.shape[1] < 2:
         raise ValueError(
             f"Contingency table must be at least 2×2, got {observed.shape}. "
-            "A degenerate table means one variable has a single category — "
+            "A degenerate table means one variable has a single category; "
             "chi-square test is not applicable."
         )
 
@@ -200,7 +200,7 @@ def chi_square_test(
 
     # Cramér's V: effect size for chi-square
     # Ranges from 0 (no association) to 1 (perfect association)
-    # k = min(rows, cols) — the smaller dimension of the contingency table
+    # k = min(rows, cols), the smaller dimension of the contingency table
     n: int = int(observed.sum())
     k: int = min(observed.shape) - 1
     cramers_v: float = np.sqrt(chi2 / (n * k)) if (n * k) > 0 else 0.0
@@ -319,7 +319,7 @@ def bootstrap_ci(
     tuple[float, float]
         (lower_bound, upper_bound) of the confidence interval.
     """
-    # Validate parameters at the boundary — invalid values would
+    # Validate parameters at the boundary: invalid values would
     # produce confusing numpy errors deeper in the computation
     if not (0 < confidence < 1):
         raise ValueError(
@@ -334,7 +334,7 @@ def bootstrap_ci(
 
     # Guard: bootstrap requires at least one finite value to resample from.
     # An empty array (all NaN or empty input) would produce a (nan, nan)
-    # interval silently — better to fail explicitly.
+    # interval silently; better to fail explicitly.
     if len(arr) == 0:
         raise ValueError(
             "Cannot compute bootstrap CI: no finite values remain after "

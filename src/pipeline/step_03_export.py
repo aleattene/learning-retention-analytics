@@ -1,4 +1,4 @@
-"""Step 03 — Export analytical views to CSV and optionally to Google Sheets.
+"""Step 03: Export analytical views to CSV and optionally to Google Sheets.
 
 Materializes each analytical view into a CSV file under data/analysis/.
 When PUSH_TO_SHEETS is enabled, the same data is also pushed to Google Sheets
