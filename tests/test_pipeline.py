@@ -1,4 +1,4 @@
-"""Tests for pipeline steps — ingest, transform, export.
+"""Tests for pipeline steps: ingest, transform, export.
 
 Most tests use the session-scoped db_conn fixture from conftest.py,
 which provides an in-memory DuckDB pre-loaded with sample data.
@@ -17,7 +17,7 @@ from src.pipeline.step_03_export import EXPORT_VIEWS, export
 
 
 class TestIngest:
-    """Test step 01 — CSV to DuckDB raw tables."""
+    """Test step 01: CSV to DuckDB raw tables."""
 
     def test_ingest_creates_all_tables(
         self, db_conn: duckdb.DuckDBPyConnection
@@ -76,7 +76,7 @@ class TestIngest:
 
 
 class TestTransform:
-    """Test step 02 — raw tables to analytical views."""
+    """Test step 02: raw tables to analytical views."""
 
     def test_views_exist(self, db_conn: duckdb.DuckDBPyConnection) -> None:
         """All 5 analytical views should be queryable."""
@@ -144,7 +144,7 @@ class TestTransform:
 
 
 class TestExport:
-    """Test step 03 — views to CSV files."""
+    """Test step 03: views to CSV files."""
 
     def test_export_creates_csv_files(self, db_conn: duckdb.DuckDBPyConnection) -> None:
         """Export should create CSV files in the output directory."""

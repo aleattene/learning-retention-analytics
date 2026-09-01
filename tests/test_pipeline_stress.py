@@ -83,7 +83,7 @@ class TestTransformStress:
     def test_transform_on_empty_tables(self) -> None:
         """Transform on empty raw tables should create views without error.
 
-        Views may return 0 rows but should not fail — this tests
+        Views may return 0 rows but should not fail; this tests
         resilience of SQL views to empty input.
         """
         conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
@@ -133,7 +133,7 @@ class TestTransformStress:
         conn: duckdb.DuckDBPyConnection = get_connection(db_path=None)
         ingest(conn=conn, use_sample=True)
 
-        # Patch VIEWS_DIR to an empty directory — all files will be "missing"
+        # Patch VIEWS_DIR to an empty directory: all files will be "missing"
         empty_views: Path = tmp_path / "views"
         empty_views.mkdir()
         with patch("src.pipeline.step_02_transform.VIEWS_DIR", empty_views):
@@ -206,7 +206,7 @@ class TestExportStress:
                 df: pd.DataFrame = pd.read_csv(path)
                 # All exported files should be valid CSVs with a header.
                 # Views produce 0 data rows, but aggregate queries (e.g.
-                # BQ5 segment_sizing) return 1 row of zeros — both are valid.
+                # BQ5 segment_sizing) return 1 row of zeros; both are valid.
                 assert len(df.columns) > 0
 
         conn.close()

@@ -1,4 +1,4 @@
-"""Stress tests for src/utils/ — logging and runtime utilities.
+"""Stress tests for src/utils/: logging and runtime utilities.
 
 Tests edge cases: exception handling in step_timer, missing libraries
 in log_environment, setup_logging idempotency, and timer accuracy.
@@ -14,7 +14,7 @@ from src.utils.logging import setup_logging
 from src.utils.runtime import log_environment, step_timer
 
 # ===================================================================
-# step_timer — stress tests
+# step_timer: stress tests
 # ===================================================================
 
 
@@ -53,7 +53,7 @@ class TestStepTimerStress:
         assert "Timed Step completed in" in caplog.text
 
     def test_timer_with_empty_step_name(self, caplog: pytest.LogCaptureFixture) -> None:
-        """Empty step name should not crash — just produce odd log messages."""
+        """Empty step name should not crash; just produce odd log messages."""
         with caplog.at_level(logging.INFO, logger="src.utils.runtime"):
             with step_timer(""):
                 pass
@@ -64,7 +64,7 @@ class TestStepTimerStress:
     ) -> None:
         """Unicode characters in step name should be logged correctly."""
         with caplog.at_level(logging.INFO, logger="src.utils.runtime"):
-            with step_timer("Étape 1 — Ingest données"):
+            with step_timer("Étape 1 · Ingest données"):
                 pass
         assert "Étape 1" in caplog.text
 
@@ -82,7 +82,7 @@ class TestStepTimerStress:
 
 
 # ===================================================================
-# log_environment — stress tests
+# log_environment: stress tests
 # ===================================================================
 
 
@@ -164,7 +164,7 @@ class TestLogEnvironmentStress:
 
 
 # ===================================================================
-# setup_logging — stress tests
+# setup_logging: stress tests
 # ===================================================================
 
 

@@ -1,4 +1,4 @@
-"""Tests for BQ SQL queries — validate business logic invariants on sample data.
+"""Tests for BQ SQL queries: validate business logic invariants on sample data.
 
 These tests verify that the BQ1–BQ5 queries produce structurally correct
 results.  The queries are loaded from sql/queries/ and executed against the
@@ -12,7 +12,7 @@ from src.config import QUERIES_DIR
 from src.db.connection import execute_query
 
 # ---------------------------------------------------------------------------
-# Helper — load a query file and execute it against the test DB
+# Helper: load a query file and execute it against the test DB
 # ---------------------------------------------------------------------------
 
 
@@ -23,7 +23,7 @@ def _run_query_file(filename: str, conn: duckdb.DuckDBPyConnection) -> pd.DataFr
 
 
 # ===================================================================
-# BQ1 — q_bq1_dropout_curves
+# BQ1: q_bq1_dropout_curves
 # ===================================================================
 
 
@@ -82,7 +82,7 @@ class TestBQ1DropoutCurves:
         )
 
         # n_enrolled from the BQ1 query (must be constant within each
-        # course-presentation — verify before comparing)
+        # course-presentation; verify before comparing)
         df_bq1: pd.DataFrame = _run_query_file("q_bq1_dropout_curves.sql", db_conn)
         n_unique_per_group: pd.Series = df_bq1.groupby(
             ["code_module", "code_presentation"]
@@ -96,7 +96,7 @@ class TestBQ1DropoutCurves:
             .reset_index()
         )
 
-        # Merge and compare — only for courses that appear in the dropout query
+        # Merge and compare: only for courses that appear in the dropout query
         # (courses with zero dropouts won't have rows in BQ1)
         merged: pd.DataFrame = df_bq1_enrolled.merge(
             df_se,
@@ -112,7 +112,7 @@ class TestBQ1DropoutCurves:
 
 
 # ===================================================================
-# BQ2 — q_bq2_early_signals
+# BQ2: q_bq2_early_signals
 # ===================================================================
 
 
@@ -183,7 +183,7 @@ class TestBQ2EarlySignals:
 
         n_with_score: int = df["first_score"].notna().sum()
         assert n_with_score > 0, (
-            "No students have first_score — first-assessment subquery "
+            "No students have first_score: first-assessment subquery "
             "returned no rows (check sample data has assessments with date <= 28)"
         )
 
@@ -198,7 +198,7 @@ class TestBQ2EarlySignals:
 
 
 # ===================================================================
-# BQ3 — q_bq3_demographics_vs_behavior
+# BQ3: q_bq3_demographics_vs_behavior
 # ===================================================================
 
 
@@ -269,7 +269,7 @@ class TestBQ3DemographicsVsBehavior:
         """When not NULL, engagement_decile_in_course must be between 1 and 10.
 
         Unlike BQ2 (which COALESCEs NULL to 1), BQ3 preserves NULL for
-        ghost students — so we filter NULLs before checking the range.
+        ghost students, so we filter NULLs before checking the range.
         """
         df: pd.DataFrame = _run_query_file(
             "q_bq3_demographics_vs_behavior.sql", db_conn
@@ -295,7 +295,7 @@ class TestBQ3DemographicsVsBehavior:
             "q_bq3_demographics_vs_behavior.sql", db_conn
         )
 
-        # NULL decile but positive active_days — should never happen
+        # NULL decile but positive active_days: should never happen
         null_decile_positive_days: pd.DataFrame = df[
             df["engagement_decile_in_course"].isna() & (df["active_days_first_28"] > 0)
         ]
@@ -304,7 +304,7 @@ class TestBQ3DemographicsVsBehavior:
             f"but active_days_first_28 > 0"
         )
 
-        # Non-NULL decile but zero active_days — should never happen
+        # Non-NULL decile but zero active_days: should never happen
         has_decile_zero_days: pd.DataFrame = df[
             df["engagement_decile_in_course"].notna()
             & (df["active_days_first_28"] == 0)
@@ -329,7 +329,7 @@ class TestBQ3DemographicsVsBehavior:
 
         n_submitted: int = (df["submitted_first_assessment"] == 1).sum()
         assert n_submitted > 0, (
-            "No students have submitted_first_assessment=1 — "
+            "No students have submitted_first_assessment=1: "
             "first-assessment subquery returned no rows "
             "(check sample data has assessments with date <= 28)"
         )
@@ -346,7 +346,7 @@ class TestBQ3DemographicsVsBehavior:
             "q_bq3_demographics_vs_behavior.sql", db_conn
         )
 
-        # Flag=1 but score is NULL — should never happen
+        # Flag=1 but score is NULL: should never happen
         flag_but_no_score: pd.DataFrame = df[
             (df["submitted_first_assessment"] == 1) & df["first_score"].isna()
         ]
@@ -355,7 +355,7 @@ class TestBQ3DemographicsVsBehavior:
             f"but NULL first_score"
         )
 
-        # Score exists but flag=0 — should never happen
+        # Score exists but flag=0: should never happen
         score_but_no_flag: pd.DataFrame = df[
             (df["submitted_first_assessment"] == 0) & df["first_score"].notna()
         ]
@@ -383,7 +383,7 @@ class TestBQ3DemographicsVsBehavior:
 
 
 # ===================================================================
-# BQ4 — q_bq4_course_comparison
+# BQ4: q_bq4_course_comparison
 # ===================================================================
 
 
@@ -433,7 +433,7 @@ class TestBQ4CourseComparison:
         """Course design metrics must be strictly positive.
 
         Every course has a duration, at least one assessment, and at
-        least one VLE resource — zero would indicate missing data.
+        least one VLE resource; zero would indicate missing data.
         """
         df: pd.DataFrame = _run_query_file("q_bq4_course_comparison.sql", db_conn)
 
@@ -447,7 +447,7 @@ class TestBQ4CourseComparison:
 
 
 # ===================================================================
-# BQ5 — q_bq5_segment_sizing
+# BQ5: q_bq5_segment_sizing
 # ===================================================================
 
 

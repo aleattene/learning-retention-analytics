@@ -1,4 +1,4 @@
-"""Smoke tests — quick sanity checks that imports and connections work.
+"""Smoke tests: quick sanity checks that imports and connections work.
 
 These tests run first and fast. If they fail, something fundamental
 is broken (missing dependency, bad config, import error).

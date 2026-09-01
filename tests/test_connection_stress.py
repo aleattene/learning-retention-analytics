@@ -115,7 +115,7 @@ class TestExecuteQueryEdgeCases:
         injection_payload: str = "Robert'; DROP TABLE users;--"
         conn.execute("INSERT INTO users VALUES (?)", [injection_payload])
 
-        # Retrieve via parameterized query — binding must treat it as literal
+        # Retrieve via parameterized query: binding must treat it as literal
         df: pd.DataFrame = execute_query(
             "SELECT * FROM users WHERE name = $name",
             conn=conn,

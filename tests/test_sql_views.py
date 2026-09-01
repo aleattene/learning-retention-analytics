@@ -1,4 +1,4 @@
-"""Tests for SQL views — validate analytical logic on sample data.
+"""Tests for SQL views: validate analytical logic on sample data.
 
 These tests verify that the SQL views produce correct results
 by checking business logic invariants on the sample data.

@@ -20,7 +20,7 @@ from src.stats.tests import (
 )
 
 # ===================================================================
-# independent_t_test — stress & edge cases
+# independent_t_test: stress & edge cases
 # ===================================================================
 
 
@@ -32,7 +32,7 @@ class TestTTestZeroVariance:
 
     scipy.stats.ttest_ind emits a RuntimeWarning when both groups are
     constant (catastrophic cancellation in moment calculation). This is
-    expected — our code handles the degenerate case in the pooled_std
+    expected: our code handles the degenerate case in the pooled_std
     and se_diff guards before using scipy's result.
     """
 
@@ -109,7 +109,7 @@ class TestTTestExtremeValues:
         assert result.ci_lower < result.ci_upper
 
     def test_single_outlier_group(self) -> None:
-        """One group with a massive outlier — should not crash."""
+        """One group with a massive outlier; should not crash."""
         g1: np.ndarray = np.array([1.0, 2.0, 3.0, 4.0, 1e10])
         g2: np.ndarray = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
         result: TestResult = independent_t_test(g1, g2, "outlier")
@@ -147,7 +147,7 @@ class TestTTestAsymmetricGroups:
     """Very unbalanced group sizes."""
 
     def test_highly_unbalanced_groups(self) -> None:
-        """One group much larger — Welch's t-test should handle this."""
+        """One group much larger; Welch's t-test should handle this."""
         rng = np.random.default_rng(42)
         g1: np.ndarray = rng.normal(10, 2, size=5)
         g2: np.ndarray = rng.normal(10, 2, size=500)
@@ -237,7 +237,7 @@ class TestTTestRandomized:
 
 
 # ===================================================================
-# chi_square_test — stress & edge cases
+# chi_square_test: stress & edge cases
 # ===================================================================
 
 
@@ -254,7 +254,7 @@ class TestChiSquareStress:
         assert 0 <= result.effect_size <= 1
 
     def test_very_sparse_table(self) -> None:
-        """Table with small counts — should still compute.
+        """Table with small counts; should still compute.
 
         Fully-zero expected cells make scipy raise, so we use a table
         that is sparse (low counts, strong association) but has no
@@ -277,7 +277,7 @@ class TestChiSquareStress:
             chi_square_test(observed, "single_col")
 
     def test_1d_array_raises(self) -> None:
-        """1D array is not a contingency table — should raise."""
+        """1D array is not a contingency table; should raise."""
         with pytest.raises(ValueError, match="at least 2×2"):
             chi_square_test(np.array([10, 20, 30]), "1d")
 
@@ -313,7 +313,7 @@ class TestChiSquareStress:
 
 
 # ===================================================================
-# apply_multiple_comparison_correction — stress
+# apply_multiple_comparison_correction: stress
 # ===================================================================
 
 
@@ -389,7 +389,7 @@ class TestMultipleComparisonStress:
 
 
 # ===================================================================
-# bootstrap_ci — stress & edge cases
+# bootstrap_ci: stress & edge cases
 # ===================================================================
 
 
@@ -489,7 +489,7 @@ class TestBootstrapStress:
 
 
 # ===================================================================
-# independent_t_test — additional edge cases
+# independent_t_test: additional edge cases
 # ===================================================================
 
 
@@ -498,7 +498,7 @@ class TestTTestInfValues:
     """Test t-test behavior when input data contains inf."""
 
     def test_inf_in_group_produces_finite_or_nan_result(self) -> None:
-        """Groups containing inf should not crash — result may be nan/inf
+        """Groups containing inf should not crash; result may be nan/inf
         but the wrapper should not raise."""
         g1: np.ndarray = np.array([1.0, 2.0, 3.0, float("inf"), 5.0])
         g2: np.ndarray = np.array([10.0, 11.0, 12.0, 13.0, 14.0])
@@ -558,7 +558,7 @@ class TestTTestMinimalGroups:
 
 
 # ===================================================================
-# chi_square_test — additional edge cases
+# chi_square_test: additional edge cases
 # ===================================================================
 
 
@@ -581,7 +581,7 @@ class TestChiSquareZeroCells:
 
 
 # ===================================================================
-# bootstrap_ci — additional edge cases
+# bootstrap_ci: additional edge cases
 # ===================================================================
 
 
@@ -598,7 +598,7 @@ class TestBootstrapEdgeCases:
             return float("nan") if arr[0] < 0 else float(np.mean(arr))
 
         data: np.ndarray = np.array([-1.0, 2.0, 3.0, 4.0, 5.0])
-        # Should not crash — numpy percentile handles NaN
+        # Should not crash: numpy percentile handles NaN
         lower, upper = bootstrap_ci(data, statistic_fn=sometimes_nan)
         # Result may be NaN but should not raise
         assert isinstance(lower, float)

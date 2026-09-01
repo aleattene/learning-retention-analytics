@@ -1,4 +1,4 @@
-"""Stress tests for src/config.py — env var edge cases and path validation.
+"""Stress tests for src/config.py: env var edge cases and path validation.
 
 The config module is loaded once at import time. Since PUSH_TO_SHEETS is
 computed at module level from os.environ, testing different env var values
