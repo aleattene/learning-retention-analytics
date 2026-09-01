@@ -1,4 +1,4 @@
--- schema.sql — DDL for OULAD raw tables
+-- schema.sql: DDL for OULAD raw tables
 --
 -- Defines the 7 raw tables that mirror the OULAD CSV structure.
 -- All types are kept generic (VARCHAR, INTEGER, DOUBLE) for ANSI compliance.

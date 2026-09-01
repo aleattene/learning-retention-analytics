@@ -1,4 +1,4 @@
--- q_bq4_course_comparison — BQ4: How do course characteristics affect retention?
+-- q_bq4_course_comparison (BQ4): How do course characteristics affect retention?
 --
 -- Aggregates course-level metrics to compare retention across the 7 OULAD modules.
 -- Each row represents one module (aggregated across all presentations) with:

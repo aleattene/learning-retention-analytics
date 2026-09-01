@@ -1,4 +1,4 @@
--- q_bq2_early_signals — BQ2: Which early behavioral signals predict drop-out?
+-- q_bq2_early_signals (BQ2): Which early behavioral signals predict drop-out?
 --
 -- Joins early engagement metrics (first 28 days) with student outcomes
 -- to create a dataset ready for statistical testing in Python.
@@ -8,7 +8,7 @@
 -- then runs t-tests comparing completed=1 vs completed=0 groups on each
 -- engagement metric, with effect sizes and multiple comparison correction.
 --
--- This query intentionally does NOT perform the statistical tests in SQL —
+-- This query intentionally does NOT perform the statistical tests in SQL;
 -- those require scipy/statsmodels and are better handled in Python.
 -- SQL's role here is to prepare the clean, joined dataset.
 
@@ -37,7 +37,7 @@ SELECT
 FROM v_student_enriched se
 
 -- LEFT JOIN because some students may have zero VLE activity in the first 28 days
--- (they enrolled but never clicked anything — a strong dropout signal itself)
+-- (they enrolled but never clicked anything, a strong dropout signal itself)
 LEFT JOIN v_engagement_early ee
     ON se.id_student = ee.id_student
     AND se.code_module = ee.code_module

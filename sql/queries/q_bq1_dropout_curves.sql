@@ -1,4 +1,4 @@
--- q_bq1_dropout_curves — BQ1: Where and when do students drop out?
+-- q_bq1_dropout_curves (BQ1): Where and when do students drop out?
 --
 -- Computes cumulative dropout curves per course-presentation.
 -- Each row represents a day when at least one dropout occurred,

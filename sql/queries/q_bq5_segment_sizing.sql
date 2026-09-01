@@ -1,13 +1,13 @@
--- q_bq5_segment_sizing — BQ5: Sizing the target segments for interventions
+-- q_bq5_segment_sizing (BQ5): Sizing the target segments for interventions
 --
 -- Quantifies the student segments that the top 3 interventions would target.
 -- Each segment is defined by observable, actionable criteria (not demographics)
 -- so that a platform operator can implement automated triggers.
 --
 -- The three segments correspond to the expected BQ5 recommendations:
---   1. "Ghost students" — enrolled but zero/minimal VLE activity in week 1-4
---   2. "Assessment non-submitters" — didn't submit the first assessment
---   3. "Early disengagers" — active initially but activity drops to zero by week 3-4
+--   1. "Ghost students": enrolled but zero/minimal VLE activity in week 1-4
+--   2. "Assessment non-submitters": didn't submit the first assessment
+--   3. "Early disengagers": active initially but activity drops to zero by week 3-4
 --
 -- This query sizes each segment and computes their dropout rates to
 -- estimate the impact of targeted interventions.

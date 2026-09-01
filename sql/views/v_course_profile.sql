@@ -1,4 +1,4 @@
--- v_course_profile — Course-level characteristics and retention metrics
+-- v_course_profile: Course-level characteristics and retention metrics
 --
 -- One row per course-presentation with aggregated metrics that characterize
 -- the course design and student outcomes. Used in BQ4 ("how do course

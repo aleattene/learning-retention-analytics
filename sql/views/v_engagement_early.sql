@@ -1,4 +1,4 @@
--- v_engagement_early — Engagement metrics for the first 28 days (0-28)
+-- v_engagement_early: Engagement metrics for the first 28 days (0-28)
 --
 -- Aggregates clickstream data from the first 4 weeks of each course
 -- to create early behavioral signals per student. This is the key view

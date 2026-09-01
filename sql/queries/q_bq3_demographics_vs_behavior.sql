@@ -1,4 +1,4 @@
--- q_bq3_demographics_vs_behavior — BQ3: Demographics vs behavior as outcome predictors
+-- q_bq3_demographics_vs_behavior (BQ3): Demographics vs behavior as outcome predictors
 --
 -- Combines demographic features from studentInfo with behavioral features
 -- from early engagement to create a dataset for comparative analysis.
