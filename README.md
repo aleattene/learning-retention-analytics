@@ -1,4 +1,4 @@
-# Learning Retention Analytics 🇬🇧 [🇮🇹](README_IT.md)
+# Learning Retention Analytics 🇬🇧 [🇮🇹](it/README.md)
 
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
 [![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
@@ -83,7 +83,8 @@ project_root/
 │   ├── pipeline/
 │   │   ├── step_01_ingest.py           # CSV OULAD → raw DuckDB tables
 │   │   ├── step_02_transform.py        # Raw tables → analytical views
-│   │   └── step_03_export.py           # Views → CSV + optional Sheets push
+│   │   ├── step_03_export.py           # Views → CSV + optional Sheets push
+│   │   └── step_04_stats.py            # BQ2/BQ3 statistical tests → CSV
 │   ├── stats/tests.py                  # Statistical test wrappers
 │   ├── sheets/push.py                  # Google Sheets integration
 │   └── utils/                          # Logging, runtime utilities
@@ -211,7 +212,7 @@ In summary:
 | [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs |
 | [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness |
 | [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist |
-| [ADR](docs/ADR.md) | 7 architectural decisions with rationale |
+| [ADR](docs/ADR.md) | Architectural decisions with rationale |
 | [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions |
 
 ---

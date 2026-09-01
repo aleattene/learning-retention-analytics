@@ -1,10 +1,10 @@
-# Analisi della Retention nell'Apprendimento 🇮🇹 [🇬🇧](README.md)
+# Analisi della Retention nell'Apprendimento 🇮🇹 [🇬🇧](../README.md)
 
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
 [![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
 [![codecov](https://codecov.io/gh/aleattene/learning-retention-analytics/graph/badge.svg?token=LS2ASS9Z6K)](https://codecov.io/gh/aleattene/learning-retention-analytics)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](../LICENSE)
 [![Dataset: OULAD](https://img.shields.io/badge/dataset-OULAD-orange.svg)](https://analyse.kmi.open.ac.uk/open_dataset)
 
 ---
@@ -83,7 +83,8 @@ project_root/
 │   ├── pipeline/
 │   │   ├── step_01_ingest.py           # CSV OULAD → tabelle raw DuckDB
 │   │   ├── step_02_transform.py        # Tabelle raw → viste analitiche
-│   │   └── step_03_export.py           # Viste → CSV + push opzionale su Sheets
+│   │   ├── step_03_export.py           # Viste → CSV + push opzionale su Sheets
+│   │   └── step_04_stats.py            # Test statistici BQ2/BQ3 → CSV
 │   ├── stats/tests.py                  # Wrapper per test statistici
 │   ├── sheets/push.py                  # Integrazione Google Sheets
 │   └── utils/                          # Logging, utilità runtime
@@ -185,7 +186,7 @@ binarizzata come Completato (Pass + Distinction) vs Non completato (Fail + Withd
 
 ## Risultati Principali
 
-L'analisi completa è disponibile nel [Report Esecutivo](reports/REPORT_IT.md).
+L'analisi completa è disponibile nel [Report Esecutivo](../reports/it/REPORT.md).
 In sintesi:
 
 - **BQ1**: circa 1 iscrizione su 3 termina con il ritiro esplicito; il dropout
@@ -208,18 +209,18 @@ In sintesi:
 
 | Documento | Contenuto |
 |-----------|-----------|
-| [Report Esecutivo](reports/REPORT_IT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
-| [Metodologia](docs/METHODOLOGY_IT.md) | Approccio statistico, scelte progettuali, trade-off |
-| [Trasferibilità](docs/TRANSFERABILITY_IT.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
-| [Migrazione Cloud](docs/MIGRATION_IT.md) | Percorso da DuckDB a BigQuery, gap e checklist |
-| [ADR](docs/ADR_IT.md) | 7 decisioni architetturali con razionale |
-| [Testing](docs/TESTING_IT.md) | Architettura di test, strategia e decisioni |
+| [Report Esecutivo](../reports/it/REPORT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
+| [Metodologia](../docs/it/METHODOLOGY.md) | Approccio statistico, scelte progettuali, trade-off |
+| [Trasferibilità](../docs/it/TRANSFERABILITY.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
+| [Migrazione Cloud](../docs/it/MIGRATION.md) | Percorso da DuckDB a BigQuery, gap e checklist |
+| [ADR](../docs/it/ADR.md) | Decisioni architetturali con razionale |
+| [Testing](../docs/it/TESTING.md) | Architettura di test, strategia e decisioni |
 
 ---
 
 ## Licenza
 
-Questo progetto è distribuito con [Licenza MIT](LICENSE).
+Questo progetto è distribuito con [Licenza MIT](../LICENSE).
 
 Il dataset OULAD è distribuito con licenza
 [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) - vedi citazione sopra.
