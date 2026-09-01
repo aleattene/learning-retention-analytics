@@ -91,8 +91,12 @@ def independent_t_test(
     # which is safer for groups that may have very different sizes
     t_stat, p_val = stats.ttest_ind(g1, g2, equal_var=False)
 
-    # Cohen's d: standardized mean difference
-    # Uses pooled standard deviation as the denominator
+    # Cohen's d: standardized mean difference.
+    # Deliberate asymmetry with the test above: the p-value comes from
+    # Welch (robust to unequal variances), while d keeps Cohen's original
+    # pooled-SD denominator. Pooled d is the convention effect-size
+    # benchmarks (0.2/0.5/0.8) were calibrated on, so switching the
+    # denominator would make our values non-comparable with literature.
     pooled_std: float = np.sqrt(
         ((len(g1) - 1) * np.var(g1, ddof=1) + (len(g2) - 1) * np.var(g2, ddof=1))
         / (len(g1) + len(g2) - 2)
@@ -187,6 +191,11 @@ def chi_square_test(
             "chi-square test is not applicable."
         )
 
+    # scipy applies Yates' continuity correction automatically on 2×2
+    # tables (e.g. gender × outcome) and skips it on larger ones. We keep
+    # the default: with our sample sizes (~32K) the correction barely
+    # moves chi2, but disabling it would silently diverge from the
+    # standard textbook treatment of 2×2 tables.
     chi2, p_val, dof, _ = stats.chi2_contingency(observed)
 
     # Cramér's V: effect size for chi-square
@@ -265,7 +274,13 @@ def apply_multiple_comparison_correction(
             next_idx = sorted_indices[i + 1]
             adjusted[idx] = min(adjusted[idx], adjusted[next_idx])
 
-        return adjusted
+        # Floating-point guard: for the largest p-value the formula is
+        # p * n / n, and the two roundings can land one ulp BELOW the raw
+        # p. Theory guarantees adjusted >= raw (n/rank >= 1), so clamp to
+        # restore the invariant. The shift is at most one ulp: invisible
+        # at any reported precision, and it cannot break monotonicity
+        # because raw p-values are themselves non-decreasing in rank.
+        return [max(adj, p) for adj, p in zip(adjusted, p_values)]
 
     raise ValueError(f"Unknown correction method: {method}")
 
