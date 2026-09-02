@@ -1,4 +1,4 @@
-# Learning Retention Analytics 🇬🇧 [🇮🇹](it/README.md)
+# Learning Retention Analytics <a href="#"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ec-1f1e7.png?v8" width="28" alt="English version"/></a> <a href="it/README.md"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ee-1f1f9.png?v8" width="28" alt="Versione italiana"/></a>
 
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
 [![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
@@ -254,6 +254,12 @@ and implementation cost.*
 | [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist *(coming soon)* |
 | [ADR](docs/ADR.md) | Architectural decisions with rationale *(coming soon)* |
 | [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions *(coming soon)* |
+
+---
+
+## Author
+
+[Alessandro Attene](https://www.linkedin.com/in/aleattene)
 
 ---
 
