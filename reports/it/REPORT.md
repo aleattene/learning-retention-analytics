@@ -1,8 +1,45 @@
-# Analisi della Retention Studentesca: Report Esecutivo
+# Analisi della Retention Studentesca: Report Esecutivo <a href="#"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ee-1f1f9.png?v8" width="28" alt="Versione italiana"/></a> <a href="../REPORT.md"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ec-1f1e7.png?v8" width="28" alt="English version"/></a>
 
-> Open University Learning Analytics Dataset (OULAD) | 32.593 iscrizioni | 7 corsi
->
-> Destinatario: Head of Product | Analisi osservazionale (associazioni, non relazioni causali) | No ML
+> **Analisi data-driven della retention e dell'abbandono degli studenti nella formazione online**
+
+> **Dati**: Open University Learning Analytics Dataset (OULAD), 32.593 iscrizioni,
+> 7 corsi. Dataset storico (coorti 2013–2014), stabile: nessun aggiornamento previsto.
+
+> **Autore**: [Alessandro Attene](https://www.linkedin.com/in/aleattene)
+
+> **Avvio dell'analisi**: aprile 2026
+
+> **Ultima revisione**: settembre 2026
+
+> **Destinatario**: Head of Product | Analisi osservazionale (associazioni, non
+> relazioni causali), nessun modello di machine learning
+
+---
+
+## Sintesi esecutiva
+
+Circa un'iscrizione su tre termina con il ritiro esplicito, e l'abbandono non è
+casuale: si concentra intorno alle tappe del corso. I segnali comportamentali dei
+primi 28 giorni predicono l'esito molto più fortemente di qualsiasi variabile
+demografica, e permettono di individuare presto gli studenti a rischio con
+interventi che non richiedono alcuna profilazione demografica.
+
+### I cinque numeri chiave
+
+| Metrica | Valore |
+|---------|--------|
+| Iscrizioni analizzate | 32.593, su 7 corsi (22 presentazioni) |
+| Tasso di ritiro complessivo | ~31%, dall'11,8% al 44,2% a seconda del modulo |
+| Predittore più forte | Decile di engagement nei primi 28 giorni (d di Cohen\* = 0,97) |
+| Divario comportamento vs demografia | Miglior predittore demografico: istruzione, V di Cramér\* = 0,15, superato da tutti i principali segnali comportamentali |
+| Segmento più a rischio | Studenti ghost: 5.555 iscrizioni (17,0%), non completamento al 92,3% |
+
+\* Le due misure di effect size (d di Cohen e V di Cramér) sono spiegate, con scala
+ed esempio svolto, nella sezione [Metodologia](#metodologia).
+
+**Azioni raccomandate** (dettagli in BQ5): attivazione degli studenti ghost entro il
+giorno 3, checkpoint prima della prima scadenza di valutazione, re-engagement alla
+settimana 3.
 
 ---
 
@@ -13,9 +50,13 @@ dataset OULAD: 32.593 iscrizioni studente-corso distribuite su 7 moduli, con cli
 comportamentale completo dal Virtual Learning Environment (VLE) dell'università, record
 delle valutazioni e profili demografici.
 
-**Definizione dell'outcome:** Ogni iscrizione è classificata come *Completato* (Pass o
-Distinction) o *Non completato* (Fail o Withdrawn). Questa suddivisione binaria è
-coerente con la letteratura OULAD e consente un'analisi di retention pulita.
+**Definizione dell'outcome:** Ogni iscrizione è classificata in una di due classi:
+
+- **Completato**: esito finale Pass o Distinction
+- **Non completato**: esito finale Fail o Withdrawn
+
+Questa suddivisione binaria è coerente con la letteratura OULAD e consente
+un'analisi di retention pulita.
 
 **Toolkit statistico:**
 
@@ -24,12 +65,43 @@ coerente con la letteratura OULAD e consente un'analisi di retention pulita.
 | Welch's t-test | Segnali continui vs. outcome | t-statistic, p-value, d di Cohen |
 | Test chi-quadrato | Variabili demografiche categoriche vs. outcome | chi-quadrato, p-value, V di Cramér |
 | Bonferroni + Benjamini-Hochberg | Correzione per confronti multipli | p-value corretti |
-| Bootstrap CI | Gruppi con tassi estremi (es. studenti ghost) | Intervalli di confidenza al 95% |
+| Bootstrap CI\* | Gruppi con tassi estremi (es. studenti ghost) | Intervalli di confidenza al 95% |
+
+\* CI = Confidence Interval (intervallo di confidenza): la forbice di valori entro
+cui, con il 95% di confidenza, cade il valore vero. Qui è stimata via bootstrap,
+cioè ricampionando molte volte i dati osservati.
 
 Tutti i test utilizzano una soglia di significatività alfa = 0,05. L'effect size, non il
 p-value, è il criterio primario per classificare i predittori, perché con ~32K osservazioni
 anche differenze banali raggiungono la significatività statistica. Non vengono utilizzati
 modelli di machine learning. Tutti i risultati sono associazioni osservazionali.
+
+### Come leggere i numeri
+
+**p-value**: indica quanto sarebbe improbabile osservare una differenza almeno così
+grande se, nella realtà, non ci fosse alcuna differenza. Sotto la soglia alfa = 0,05
+la differenza si dice statisticamente significativa.
+
+**d di Cohen** (per variabili numeriche): misura la distanza tra due gruppi in unità
+di variabilità tipica (deviazioni standard). Scala di riferimento:
+
+- d ≈ 0,2: effetto piccolo
+- d ≈ 0,5: effetto medio
+- d ≥ 0,8: effetto grande
+
+*Esempio svolto con i dati reali del progetto:* nei primi 28 giorni, chi poi completa
+il corso è attivo in media 12,8 giorni; chi non completa, 6,5. La differenza (6,33
+giorni), rapportata alla deviazione standard aggregata dei due gruppi (circa 7,05
+giorni), dà d = 6,33 / 7,05 ≈ 0,90: un effetto grande.
+
+**V di Cramér** (per variabili categoriche): misura la forza dell'associazione tra
+due variabili su una scala che va da 0 (nessuna associazione) a 1 (associazione
+perfetta). Con un outcome binario, valori intorno a 0,1 indicano un'associazione
+debole, intorno a 0,3 media, da 0,5 in su forte.
+
+*Esempio svolto con i dati reali del progetto:* per il livello di istruzione il test
+chi-quadrato vale 737,2 su 32.593 iscrizioni; con outcome binario la formula si
+riduce a V = radice quadrata di (737,2 / 32.593) ≈ 0,15: un'associazione debole.
 
 ---
 
@@ -235,7 +307,7 @@ primi 28 giorni.
 
 | Segmento | Definizione | Dimensione | Tasso di non completamento |
 |----------|------------|------------|---------------------------|
-| **Studenti ghost** | ≤1 giorno attivo AND <10 click | **5.555** (17,0%) | **92,3%** |
+| **Studenti ghost** | ≤1 giorno attivo e <10 click | **5.555** (17,0%) | **92,3%** |
 | **Non-submitter** | Nessuna valutazione consegnata nei primi 28 giorni | **11.494** (35,3%) | **71,8%** |
 | **Early disengager** | Attività nei giorni 0–14, zero nei giorni 15–28 | **2.213** (6,8%) | **77,8%** |
 
@@ -248,11 +320,14 @@ una media di piattaforma del 47,2%.
 | | Attivazione Ghost | Checkpoint Valutazioni | Re-engagement Settimana 3 |
 |---|---|---|---|
 | **Priorità** | 1: Quick win | 2: Costruire dopo | 3: Investire quando pronti |
-| **Trigger** | Zero attività VLE entro il giorno 3 | 3 giorni prima della prima scadenza, non consegnato | 3+ giorni consecutivi di inattività dopo attività iniziale |
+| **Trigger** | Zero attività VLE\* entro il giorno 3 | 3 giorni prima della prima scadenza, non consegnato | 3+ giorni consecutivi di inattività dopo attività iniziale |
 | **Azione** | Sequenza email: benvenuto giorno 3 + follow-up giorno 7 con link al primo step | Promemoria con anteprima della valutazione e stima del tempo | Email "Ci manchi" con riepilogo progressi e confronto con i pari |
 | **Costo** | **Basso** (solo automazione email) | **Medio** (trigger consapevoli delle scadenze + calendario del corso) | **Medio-Alto** (tracciamento attività in tempo reale + personalizzazione) |
 | **Evidenza** | BQ2: l'engagement precoce è il predittore più forte; BQ3: comportamento > demografia | BQ2: la submission è un segnale binario chiave; BQ1: cliff alle scadenze | BQ1: cliff di abbandono a metà corso alle settimane 3–4; BQ2: predittore ultimo-giorno-attivo |
 | **Stima impatto** | Maggiore: divario più ampio tra segmento e tasso della piattaforma | Medio: divario sostanziale submitter vs non-submitter | Medio: targetizza un failure mode distinto dai ghost |
+
+\* VLE = Virtual Learning Environment, la piattaforma online dove vivono i
+contenuti del corso.
 
 **Approccio alla stima dell'impatto:** Per ogni intervento, modelliamo scenari di
 conversione conservativi (10–25% degli studenti targetizzati cambiano comportamento).
@@ -303,3 +378,24 @@ appartenenti a più segmenti. La sovrapposizione ghost–non-submitter è sostan
 - **Nota etica.** Tutti gli interventi targetizzano il comportamento, non la
   demografia. L'outreach automatizzato dovrebbe includere meccanismi di opt-out
   per rispettare l'autonomia degli studenti.
+
+---
+
+## Provenienza dei grafici
+
+Tutte le figure di questo report sono generate dai 7 notebook di analisi in
+[`notebooks/`](../../notebooks/): il prefisso numerico del file immagine corrisponde
+al notebook che lo produce (per esempio `03_dropout_curves_overlaid.png` nasce da
+`03_bq1_dropout_timing.ipynb`). I notebook leggono i CSV esportati dalla pipeline in
+`data/analysis/` (cartella locale, non versionata) e salvano i grafici in
+`reports/figures/`.
+
+Per rigenerare le figure da un clone del repository:
+
+1. eseguire la pipeline: `python -m run_pipeline`
+2. eseguire i notebook in ordine (da 01 a 07): ogni notebook riesporta le proprie figure
+
+Le istruzioni complete di setup sono nel [README](../../it/README.md), sezione
+Avvio Rapido. I numeri citati nel testo sono verificati sugli stessi CSV esportati
+dalla pipeline, in particolare sugli export statistici (`stats_*.csv`) per effect
+size e intervalli di confidenza.

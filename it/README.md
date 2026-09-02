@@ -1,4 +1,4 @@
-# Analisi della Retention nell'Apprendimento 🇮🇹 [🇬🇧](../README.md)
+# Analisi della Retention nell'Apprendimento <a href="#"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ee-1f1f9.png?v8" width="28" alt="Versione italiana"/></a> <a href="../README.md"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ec-1f1e7.png?v8" width="28" alt="English version"/></a>
 
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
 [![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
@@ -255,6 +255,12 @@ e costo di implementazione.*
 | [Migrazione Cloud](../docs/it/MIGRATION.md) | Percorso da DuckDB a BigQuery, gap e checklist *(in arrivo)* |
 | [ADR](../docs/it/ADR.md) | Decisioni architetturali con razionale *(in arrivo)* |
 | [Testing](../docs/it/TESTING.md) | Architettura di test, strategia e decisioni *(in arrivo)* |
+
+---
+
+## Autore
+
+[Alessandro Attene](https://www.linkedin.com/in/aleattene)
 
 ---
 
