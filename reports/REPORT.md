@@ -1,8 +1,44 @@
-# Student Retention Analysis: Executive Report
+# Student Retention Analysis: Executive Report <a href="#"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ec-1f1e7.png?v8" width="28" alt="English version"/></a> <a href="it/REPORT.md"><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f1ee-1f1f9.png?v8" width="28" alt="Versione italiana"/></a>
 
-> Open University Learning Analytics Dataset (OULAD) | 32,593 enrollments | 7 courses
->
-> Audience: Head of Product | Observational analysis (associations, not causal claims) | No ML
+> **Data-driven analysis of student retention and drop-out in online education**
+
+> **Data**: Open University Learning Analytics Dataset (OULAD), 32,593 enrollments,
+> 7 courses. Historical dataset (2013–2014 cohorts), stable: no updates expected.
+
+> **Author**: [Alessandro Attene](https://www.linkedin.com/in/aleattene)
+
+> **Analysis started**: April 2026
+
+> **Last revised**: September 2026
+
+> **Audience**: Head of Product | Observational analysis (associations, not causal
+> claims), no machine learning models
+
+---
+
+## Executive Summary
+
+Roughly one in three enrollments ends in explicit withdrawal, and dropout is not
+random: it clusters around course milestones. Behavioral signals from the first
+28 days predict the outcome far more strongly than any demographic variable, and
+they make it possible to identify at-risk students early with interventions that
+require no demographic profiling.
+
+### The Five Key Numbers
+
+| Metric | Value |
+|--------|-------|
+| Enrollments analyzed | 32,593, across 7 courses (22 presentations) |
+| Overall withdrawal rate | ~31%, ranging from 11.8% to 44.2% by module |
+| Strongest predictor | Engagement decile in the first 28 days (Cohen's d\* = 0.97) |
+| Behavior vs demographics gap | Best demographic predictor: education, Cramer's V\* = 0.15, outperformed by every major behavioral signal |
+| Highest-risk segment | Ghost students: 5,555 enrollments (17.0%), 92.3% non-completion |
+
+\* Both effect size measures (Cohen's d and Cramer's V) are explained, with scale
+and a worked example, in the [Methodology](#methodology) section.
+
+**Recommended actions** (details in BQ5): ghost-student activation by day 3, a
+checkpoint before the first assessment deadline, and week-3 re-engagement.
 
 ---
 
@@ -13,9 +49,13 @@ OULAD dataset: 32,593 student-course enrollments across 7 modules, with complete
 behavioral clickstream from the university's Virtual Learning Environment (VLE),
 assessment records, and demographic profiles.
 
-**Outcome definition:** Each enrollment is classified as *Completed* (Pass or Distinction)
-or *Not completed* (Fail or Withdrawn). This binary split is consistent with the OULAD
-literature and enables clean retention analysis.
+**Outcome definition:** Each enrollment is classified into one of two classes:
+
+- **Completed**: final result Pass or Distinction
+- **Not completed**: final result Fail or Withdrawn
+
+This binary split is consistent with the OULAD literature and enables clean
+retention analysis.
 
 **Statistical toolkit:**
 
@@ -24,12 +64,43 @@ literature and enables clean retention analysis.
 | Welch's t-test | Continuous signals vs. outcome | t-statistic, p-value, Cohen's d |
 | Chi-square test | Categorical demographics vs. outcome | chi-square, p-value, Cramer's V |
 | Bonferroni + Benjamini-Hochberg | Multiple comparison correction | Adjusted p-values |
-| Bootstrap CI | Extreme-rate groups (e.g., ghost students) | 95% confidence intervals |
+| Bootstrap CI\* | Extreme-rate groups (e.g., ghost students) | 95% confidence intervals |
+
+\* CI = Confidence Interval: the range of values within which, with 95% confidence,
+the true value lies. Here it is estimated via bootstrap, that is by resampling the
+observed data many times.
 
 All tests use a significance threshold of alpha = 0.05. Effect size, not p-value, is the
 primary criterion for ranking predictors, because with ~32K observations even trivial
 differences reach statistical significance. No machine learning models are used. All
 findings are observational associations.
+
+### How to Read the Numbers
+
+**p-value**: how unlikely it would be to observe a difference at least this large
+if, in reality, there were no difference at all. Below the alpha = 0.05 threshold
+the difference is called statistically significant.
+
+**Cohen's d** (for numeric variables): measures the distance between two groups in
+units of typical variability (standard deviations). Reference scale:
+
+- d ≈ 0.2: small effect
+- d ≈ 0.5: medium effect
+- d ≥ 0.8: large effect
+
+*Worked example with the project's real data:* in the first 28 days, students who
+eventually complete the course are active on average 12.8 days; those who do not,
+6.5. The difference (6.33 days), divided by the pooled standard deviation of the
+two groups (about 7.05 days), gives d = 6.33 / 7.05 ≈ 0.90: a large effect.
+
+**Cramer's V** (for categorical variables): measures the strength of association
+between two variables on a scale from 0 (no association) to 1 (perfect
+association). With a binary outcome, values around 0.1 indicate a weak
+association, around 0.3 medium, 0.5 and above strong.
+
+*Worked example with the project's real data:* for education level the chi-square
+test yields 737.2 on 32,593 enrollments; with a binary outcome the formula reduces
+to V = square root of (737.2 / 32,593) ≈ 0.15: a weak association.
 
 ---
 
@@ -222,7 +293,7 @@ not demographics. All definitions use first-28-day behavioral data.
 
 | Segment | Definition | Size | Non-completion rate |
 |---------|-----------|------|---------------------|
-| **Ghost students** | ≤1 active day AND <10 clicks | **5,555** (17.0%) | **92.3%** |
+| **Ghost students** | ≤1 active day and <10 clicks | **5,555** (17.0%) | **92.3%** |
 | **Assessment non-submitters** | No assessment submitted in first 28 days | **11,494** (35.3%) | **71.8%** |
 | **Early disengagers** | Activity in days 0–14, zero in days 15–28 | **2,213** (6.8%) | **77.8%** |
 
@@ -234,11 +305,14 @@ Ghost students complete at just 7.7%, against a platform average of 47.2%.
 | | Ghost Activation | Assessment Checkpoint | Week 3 Re-engagement |
 |---|---|---|---|
 | **Priority** | 1: Quick win | 2: Build next | 3: Invest when ready |
-| **Trigger** | Zero VLE activity by day 3 | 3 days before first deadline, not submitted | 3+ consecutive inactive days after initial activity |
+| **Trigger** | Zero VLE\* activity by day 3 | 3 days before first deadline, not submitted | 3+ consecutive inactive days after initial activity |
 | **Action** | Email sequence: day-3 welcome + day-7 follow-up with first-step link | Reminder with assessment preview and time estimate | "We miss you" email with progress summary and peer comparison |
 | **Cost** | **Low** (email automation only) | **Medium** (deadline-aware triggers + course calendar) | **Medium-High** (real-time activity tracking + personalization) |
 | **Evidence** | BQ2: early engagement is strongest predictor; BQ3: behavior > demographics | BQ2: assessment submission is a key binary signal; BQ1: cliffs at deadlines | BQ1: mid-course dropout cliffs at weeks 3–4; BQ2: last-active-day predictor |
 | **Impact estimate** | Largest: widest gap between segment and platform rate | Medium: substantial submitter vs non-submitter gap | Medium: targets distinct failure mode from ghosts |
+
+\* VLE = Virtual Learning Environment, the online platform where the course
+content lives.
 
 **Impact estimation approach:** For each intervention, we model conservative conversion
 scenarios (10–25% of targeted students change behavior). Converted ghost students are
@@ -282,3 +356,24 @@ The ghost–non-submitter overlap is substantial.*
   qualitative. Actual engineering effort depends on existing platform infrastructure.
 - **Ethical note.** All interventions target behavior, not demographics. Automated
   outreach should include opt-out mechanisms to respect student autonomy.
+
+---
+
+## Chart Provenance
+
+All figures in this report are generated by the 7 analysis notebooks in
+[`notebooks/`](../notebooks/): the numeric prefix of each image file matches the
+notebook that produces it (for example `03_dropout_curves_overlaid.png` comes from
+`03_bq1_dropout_timing.ipynb`). The notebooks read the CSV files exported by the
+pipeline into `data/analysis/` (local folder, not versioned) and save the charts
+into `reports/figures/`.
+
+To regenerate the figures from a repository clone:
+
+1. run the pipeline: `python -m run_pipeline`
+2. run the notebooks in order (01 through 07): each notebook re-exports its own figures
+
+Full setup instructions are in the [README](../README.md), Quick Start section.
+The numbers quoted in the text are verified against the same pipeline-exported
+CSVs, in particular the statistical exports (`stats_*.csv`) for effect sizes and
+confidence intervals.
