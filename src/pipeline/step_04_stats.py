@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 # Significance threshold for the significant_* flags in the exported CSVs.
 # 0.05 matches the notebooks; the flags are a convenience for dashboard
-# consumers — effect size remains the primary ranking criterion.
+# consumers; effect size remains the primary ranking criterion.
 ALPHA: float = 0.05
 
 # Bootstrap resamples for the ghost/active completion-rate CIs.

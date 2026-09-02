@@ -79,7 +79,7 @@ project_root/
 ├── run_pipeline.py                     # Entrypoint: orchestra l'ETL
 ├── src/
 │   ├── config.py                       # Path, costanti, variabili d'ambiente
-│   ├── db/connection.py                # Astrazione DB (DuckDB ora, BQ in futuro)
+│   ├── db/connection.py                # Astrazione DB (DuckDB ora, BigQuery in futuro)
 │   ├── pipeline/
 │   │   ├── step_01_ingest.py           # CSV OULAD → tabelle raw DuckDB
 │   │   ├── step_02_transform.py        # Tabelle raw → viste analitiche
@@ -171,7 +171,7 @@ su 7 moduli (22 presentazioni) presso la Open University (UK).
 | studentVle | Clickstream (click giornalieri per risorsa) | id_site, date, sum_click |
 | studentAssessment | Punteggi delle valutazioni | id_assessment, score |
 | assessments | Metadati delle valutazioni | assessment_type, date, weight |
-| vle | Metadati risorse VLE | activity_type |
+| vle | Metadati risorse VLE (Virtual Learning Environment) | activity_type |
 | courses | Metadati dei corsi | module_presentation_length |
 
 **Variabile target**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},

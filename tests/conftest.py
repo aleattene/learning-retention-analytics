@@ -1,4 +1,4 @@
-"""Shared test fixtures — DuckDB in-memory database with sample data.
+"""Shared test fixtures: DuckDB in-memory database with sample data.
 
 All tests use an in-memory DuckDB connection loaded with data_sample/ CSVs.
 This avoids touching the real database and makes tests fast and isolated.

@@ -1,4 +1,4 @@
-"""Step 02 — Transform raw tables into analytical views.
+"""Step 02: Transform raw tables into analytical views.
 
 Executes all SQL view definitions from sql/views/ against the DuckDB database.
 Views are the analytical backbone of the project: they encapsulate the business

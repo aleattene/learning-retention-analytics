@@ -10,7 +10,8 @@
 
 Questo report sintetizza i risultati di una pipeline analitica SQL-driven applicata al
 dataset OULAD: 32.593 iscrizioni studente-corso distribuite su 7 moduli, con clickstream
-comportamentale completo, record delle valutazioni e profili demografici.
+comportamentale completo dal Virtual Learning Environment (VLE) dell'università, record
+delle valutazioni e profili demografici.
 
 **Definizione dell'outcome:** Ogni iscrizione è classificata come *Completato* (Pass o
 Distinction) o *Non completato* (Fail o Withdrawn). Questa suddivisione binaria è
@@ -145,7 +146,8 @@ Questi segnali comportamentali sono forti. Ma sono semplicemente proxy della dem
 > l'engagement alto supera drammaticamente l'engagement basso.
 
 Abbiamo testato 6 variabili demografiche categoriche (genere, fascia d'età, livello di
-istruzione, fascia IMD, disabilità, regione) e 2 variabili demografiche numeriche
+istruzione, fascia IMD (Index of Multiple Deprivation), disabilità, regione) e 2
+variabili demografiche numeriche
 (tentativi precedenti, crediti studiati) contro l'esito di completamento. Tutte le 8 sono
 statisticamente significative dopo correzione Benjamini-Hochberg, ma i loro effect size
 sono uniformemente deboli. Il predittore demografico più forte (livello di istruzione

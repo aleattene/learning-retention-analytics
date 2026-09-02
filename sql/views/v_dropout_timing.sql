@@ -1,11 +1,11 @@
--- v_dropout_timing — When students drop out relative to course timeline
+-- v_dropout_timing: When students drop out relative to course timeline
 --
 -- Enriches each withdrawal event with course context (total duration,
 -- percentage through the course) to answer BQ1: "where and when do
 -- students drop out?"
 --
 -- Only includes students who explicitly withdrew (date_unregistration IS NOT NULL).
--- Students who failed but never withdrew are excluded — they represent
+-- Students who failed but never withdrew are excluded: they represent
 -- a different phenomenon (academic failure vs. active departure).
 --
 -- The dropout_pct field normalizes timing across courses of different lengths,

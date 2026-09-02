@@ -79,7 +79,7 @@ project_root/
 ├── run_pipeline.py                     # Entrypoint: orchestrates ETL
 ├── src/
 │   ├── config.py                       # Paths, constants, env vars
-│   ├── db/connection.py                # DB abstraction (DuckDB now, BQ later)
+│   ├── db/connection.py                # DB abstraction (DuckDB now, BigQuery later)
 │   ├── pipeline/
 │   │   ├── step_01_ingest.py           # CSV OULAD → raw DuckDB tables
 │   │   ├── step_02_transform.py        # Raw tables → analytical views
@@ -171,7 +171,7 @@ contains 32,593 course enrollments by 28,785 distinct students across
 | studentVle | Clickstream (daily clicks per resource) | id_site, date, sum_click |
 | studentAssessment | Assessment scores | id_assessment, score |
 | assessments | Assessment metadata | assessment_type, date, weight |
-| vle | VLE resource metadata | activity_type |
+| vle | Virtual Learning Environment (VLE) resource metadata | activity_type |
 | courses | Course metadata | module_presentation_length |
 
 **Target variable**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},

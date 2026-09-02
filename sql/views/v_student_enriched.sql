@@ -1,4 +1,4 @@
--- v_student_enriched — Core student-level view with enriched outcome data
+-- v_student_enriched: Core student-level view with enriched outcome data
 --
 -- Combines studentInfo (demographics + final result) with studentRegistration
 -- (enrollment/withdrawal dates) to create a single row per student-module

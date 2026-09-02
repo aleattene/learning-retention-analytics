@@ -1,4 +1,4 @@
-"""Runtime utilities — step timing and environment info.
+"""Runtime utilities: step timing and environment info.
 
 Provides a context manager for timing pipeline steps and a function
 to log the current runtime environment (Python version, key library versions).
@@ -21,9 +21,9 @@ def step_timer(step_name: str) -> Generator[None, None, None]:
 
     Usage
     -----
-    >>> with step_timer("Step 01 — Ingest"):
+    >>> with step_timer("Step 01: Ingest"):
     ...     ingest()
-    # logs: "Step 01 — Ingest completed in 3.42s"
+    # logs: "Step 01: Ingest completed in 3.42s"
     """
     start: float = time.perf_counter()
     logger.info("Starting: %s", step_name)
@@ -48,7 +48,7 @@ def log_environment() -> None:
     for lib_name in ["duckdb", "pandas", "numpy", "scipy"]:
         try:
             lib = __import__(lib_name)
-            # Not all modules expose __version__ — guard to avoid
+            # Not all modules expose __version__, so guard to avoid
             # AttributeError breaking the entire startup log
             version: str = getattr(lib, "__version__", "unknown")
             logger.info("%s %s", lib_name, version)

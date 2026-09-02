@@ -1,4 +1,4 @@
--- v_engagement_daily — Daily engagement aggregates per student
+-- v_engagement_daily: Daily engagement aggregates per student
 --
 -- Aggregates the raw clickstream (studentVle) to one row per student per day,
 -- summing clicks across all VLE resources and counting distinct resource types.

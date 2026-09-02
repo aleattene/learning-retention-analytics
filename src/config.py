@@ -1,4 +1,4 @@
-"""Centralized configuration — paths, constants, and env vars.
+"""Centralized configuration: paths, constants, and env vars.
 
 All paths are relative to PROJECT_ROOT.
 Single env var: PUSH_TO_SHEETS (default false).

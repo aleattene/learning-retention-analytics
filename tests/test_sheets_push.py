@@ -1,4 +1,4 @@
-"""Tests for src/sheets/push.py — Google Sheets push via gspread + Keychain.
+"""Tests for src/sheets/push.py: Google Sheets push via gspread + Keychain.
 
 All external dependencies (keyring, gspread, google.oauth2) are mocked
 so these tests run without credentials or network access.
@@ -72,13 +72,13 @@ class TestGetCredentialsFromKeychain:
 
     @patch("src.sheets.push.keyring.get_password", return_value="")
     def test_empty_string_treated_as_missing(self, mock_kp: MagicMock) -> None:
-        """Empty string from Keychain is falsy — should raise like None."""
+        """Empty string from Keychain is falsy; should raise like None."""
         with pytest.raises(RuntimeError, match="Credentials not found"):
             _get_credentials_from_keychain()
 
 
 class TestAuthorize:
-    """Tests for _authorize — gspread client creation."""
+    """Tests for _authorize: gspread client creation."""
 
     @patch("src.sheets.push.gspread.authorize")
     @patch("src.sheets.push.Credentials.from_service_account_info")
@@ -126,7 +126,7 @@ class TestAuthorize:
 
 
 class TestPushCsvsToSheets:
-    """Tests for push_csvs_to_sheets — worksheet create/update logic."""
+    """Tests for push_csvs_to_sheets: worksheet create/update logic."""
 
     def test_no_spreadsheet_id_skips_push(
         self, caplog: pytest.LogCaptureFixture
