@@ -92,9 +92,14 @@ project_root/
 │   ├── schema.sql                      # DDL for 7 raw OULAD tables
 │   ├── views/                          # 5 analytical views
 │   └── queries/                        # 5 business question queries
+├── notebooks/                          # 7 analysis notebooks (EDA + BQ1-BQ5)
+├── reports/
+│   ├── REPORT.md                       # Executive report (IT mirror in reports/it/)
+│   └── figures/                        # Charts exported by the notebooks
 ├── data_sample/                        # Synthetic data (~200 students) for CI
+├── it/                                 # Italian mirror of this README
 ├── tests/                              # pytest suite (unit + integration + stress)
-└── .github/workflows/                  # test.yml + lint.yml
+└── .github/workflows/                  # test.yml + code_quality.yml
 ```
 
 ---
@@ -135,6 +140,10 @@ python scripts/download_oulad.py
 ```
 
 This downloads the full OULAD dataset (~450 MB) into `data/raw/`.
+
+> **Note**: the download script is not yet published *(coming soon)*. In the
+> meantime, the dataset can be downloaded manually from the official OULAD
+> page linked in the [Dataset](#dataset) section.
 
 ### Run the pipeline
 
@@ -184,6 +193,23 @@ binarized as Completed (Pass + Distinction) vs Not completed (Fail + Withdrawn).
 
 ---
 
+## Analysis Notebooks
+
+The full analysis lives in 7 notebooks: two exploratory, one per
+business question.
+
+| # | Notebook | Focus |
+|---|----------|-------|
+| 01 | [EDA: Student Base](notebooks/01_eda_student_base.ipynb) | Population profile, outcomes, data quality baseline |
+| 02 | [EDA: Engagement Patterns](notebooks/02_eda_engagement_patterns.ipynb) | Clickstream behavior, engagement typologies, ghost students |
+| 03 | [BQ1: Dropout Timing](notebooks/03_bq1_dropout_timing.ipynb) | Cumulative dropout curves, cliff detection |
+| 04 | [BQ2: Early Signals](notebooks/04_bq2_early_signals.ipynb) | First-28-day behavioral signals, effect size ranking |
+| 05 | [BQ3: Demographics vs Behavior](notebooks/05_bq3_demographics_vs_behavior.ipynb) | Comparative predictive strength of the two feature families |
+| 06 | [BQ4: Course Comparison](notebooks/06_bq4_course_comparison.ipynb) | Course design features vs retention |
+| 07 | [BQ5: Recommendations Synthesis](notebooks/07_bq5_recommendations_synthesis.ipynb) | Segment sizing, priority matrix, top 3 interventions |
+
+---
+
 ## Key Findings
 
 The full analysis is available in the [Executive Report](reports/REPORT.md).
@@ -202,6 +228,20 @@ In summary:
 - **BQ5**: three behavior-based interventions (ghost activation, assessment
   checkpoint, week-3 re-engagement) cover the majority of at-risk students
 
+The story in three charts: the problem, the insight, the action.
+
+![Cumulative dropout curves for all course-presentations](reports/figures/03_dropout_curves_overlaid.png)
+*Where the problem lives (BQ1): withdrawal accumulates steadily, with
+course-specific cliffs around assessment deadlines.*
+
+![Effect size comparison: demographics vs behavior](reports/figures/05_demographics_vs_behavior_comparison.png)
+*The core insight (BQ3): early behavioral signals carry far larger effect
+sizes than any demographic attribute.*
+
+![Priority matrix: impact vs cost](reports/figures/07_priority_matrix.png)
+*The action (BQ5): candidate interventions positioned by estimated impact
+and implementation cost.*
+
 ---
 
 ## Documentation
@@ -209,11 +249,11 @@ In summary:
 | Document | Content |
 |----------|---------|
 | [Executive Report](reports/REPORT.md) | Full BQ1–BQ5 analysis with figures and numbers |
-| [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs |
-| [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness |
-| [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist |
-| [ADR](docs/ADR.md) | Architectural decisions with rationale |
-| [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions |
+| [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs *(coming soon)* |
+| [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness *(coming soon)* |
+| [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist *(coming soon)* |
+| [ADR](docs/ADR.md) | Architectural decisions with rationale *(coming soon)* |
+| [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions *(coming soon)* |
 
 ---
 

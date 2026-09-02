@@ -92,9 +92,14 @@ project_root/
 │   ├── schema.sql                      # DDL per le 7 tabelle raw OULAD
 │   ├── views/                          # 5 viste analitiche
 │   └── queries/                        # 5 query per le domande di business
+├── notebooks/                          # 7 notebook di analisi (EDA + BQ1-BQ5)
+├── reports/
+│   ├── REPORT.md                       # Report esecutivo (specchio IT in reports/it/)
+│   └── figures/                        # Grafici esportati dai notebook
 ├── data_sample/                        # Dati sintetici (~200 studenti) per CI
+├── it/                                 # Specchio italiano di questo README
 ├── tests/                              # Suite pytest (unit + integration + stress)
-└── .github/workflows/                  # test.yml + lint.yml
+└── .github/workflows/                  # test.yml + code_quality.yml
 ```
 
 ---
@@ -135,6 +140,10 @@ python scripts/download_oulad.py
 ```
 
 Questo scarica il dataset OULAD completo (~450 MB) in `data/raw/`.
+
+> **Nota**: lo script di download non è ancora pubblicato *(in arrivo)*.
+> Nel frattempo il dataset può essere scaricato manualmente dalla pagina
+> ufficiale OULAD linkata nella sezione [Dataset](#dataset).
 
 ### Esecuzione della pipeline
 
@@ -184,6 +193,23 @@ binarizzata come Completato (Pass + Distinction) vs Non completato (Fail + Withd
 
 ---
 
+## Notebook di Analisi
+
+L'analisi completa vive in 7 notebook: due esplorativi, uno per ogni
+domanda di business.
+
+| # | Notebook | Focus |
+|---|----------|-------|
+| 01 | [EDA: Student Base](../notebooks/01_eda_student_base.ipynb) | Profilo della popolazione, esiti, baseline di qualità dei dati |
+| 02 | [EDA: Engagement Patterns](../notebooks/02_eda_engagement_patterns.ipynb) | Comportamento clickstream, tipologie di engagement, studenti ghost |
+| 03 | [BQ1: Dropout Timing](../notebooks/03_bq1_dropout_timing.ipynb) | Curve cumulative di abbandono, rilevamento punti critici |
+| 04 | [BQ2: Early Signals](../notebooks/04_bq2_early_signals.ipynb) | Segnali comportamentali nei primi 28 giorni, ranking per effect size |
+| 05 | [BQ3: Demographics vs Behavior](../notebooks/05_bq3_demographics_vs_behavior.ipynb) | Forza predittiva comparata delle due famiglie di variabili |
+| 06 | [BQ4: Course Comparison](../notebooks/06_bq4_course_comparison.ipynb) | Caratteristiche di design dei corsi e retention |
+| 07 | [BQ5: Recommendations Synthesis](../notebooks/07_bq5_recommendations_synthesis.ipynb) | Dimensionamento dei segmenti, matrice di priorità, top 3 interventi |
+
+---
+
 ## Risultati Principali
 
 L'analisi completa è disponibile nel [Report Esecutivo](../reports/it/REPORT.md).
@@ -203,6 +229,20 @@ In sintesi:
   valutazioni, re-engagement settimana 3) coprono la maggioranza degli
   studenti a rischio
 
+La storia in tre grafici: il problema, l'insight, l'azione.
+
+![Curve cumulative di abbandono per tutte le presentazioni dei corsi](../reports/figures/03_dropout_curves_overlaid.png)
+*Dove vive il problema (BQ1): il ritiro si accumula costantemente, con
+punti critici specifici per corso intorno alle scadenze di valutazione.*
+
+![Confronto effect size: demografia vs comportamento](../reports/figures/05_demographics_vs_behavior_comparison.png)
+*L'insight centrale (BQ3): i segnali comportamentali precoci mostrano
+effect size molto più ampi di qualunque attributo demografico.*
+
+![Matrice di priorità: impatto vs costo](../reports/figures/07_priority_matrix.png)
+*L'azione (BQ5): gli interventi candidati posizionati per impatto stimato
+e costo di implementazione.*
+
 ---
 
 ## Documentazione
@@ -210,11 +250,11 @@ In sintesi:
 | Documento | Contenuto |
 |-----------|-----------|
 | [Report Esecutivo](../reports/it/REPORT.md) | Analisi completa BQ1–BQ5 con figure e numeri |
-| [Metodologia](../docs/it/METHODOLOGY.md) | Approccio statistico, scelte progettuali, trade-off |
-| [Trasferibilità](../docs/it/TRANSFERABILITY.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness |
-| [Migrazione Cloud](../docs/it/MIGRATION.md) | Percorso da DuckDB a BigQuery, gap e checklist |
-| [ADR](../docs/it/ADR.md) | Decisioni architetturali con razionale |
-| [Testing](../docs/it/TESTING.md) | Architettura di test, strategia e decisioni |
+| [Metodologia](../docs/it/METHODOLOGY.md) | Approccio statistico, scelte progettuali, trade-off *(in arrivo)* |
+| [Trasferibilità](../docs/it/TRANSFERABILITY.md) | Portabilità dei pattern a SaaS, abbonamenti, fitness *(in arrivo)* |
+| [Migrazione Cloud](../docs/it/MIGRATION.md) | Percorso da DuckDB a BigQuery, gap e checklist *(in arrivo)* |
+| [ADR](../docs/it/ADR.md) | Decisioni architetturali con razionale *(in arrivo)* |
+| [Testing](../docs/it/TESTING.md) | Architettura di test, strategia e decisioni *(in arrivo)* |
 
 ---
 
