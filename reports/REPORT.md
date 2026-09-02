@@ -10,7 +10,8 @@
 
 This report synthesizes findings from a SQL-driven analytical pipeline applied to the
 OULAD dataset: 32,593 student-course enrollments across 7 modules, with complete
-behavioral clickstream, assessment records, and demographic profiles.
+behavioral clickstream from the university's Virtual Learning Environment (VLE),
+assessment records, and demographic profiles.
 
 **Outcome definition:** Each enrollment is classified as *Completed* (Pass or Distinction)
 or *Not completed* (Fail or Withdrawn). This binary split is consistent with the OULAD
@@ -138,8 +139,8 @@ These behavioral signals are strong. But are they merely proxies for demographic
 > than demographic effect sizes. Within every education level, high engagement
 > dramatically outperforms low engagement.
 
-We tested 6 categorical demographic features (gender, age band, education level, IMD
-band, disability, region) and 2 numeric demographic features (previous attempts, studied
+We tested 6 categorical demographic features (gender, age band, education level,
+Index of Multiple Deprivation (IMD) band, disability, region) and 2 numeric demographic features (previous attempts, studied
 credits) against completion outcome. All 8 are statistically significant after
 Benjamini-Hochberg correction, but their effect sizes are uniformly weak. The strongest
 demographic predictor (highest education) reaches a Cramer's V of approximately **0.15**;
