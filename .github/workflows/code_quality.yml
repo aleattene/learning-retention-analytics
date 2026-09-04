@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+# Lint hooks only read the working tree; nothing here pushes or comments.
+# Explicit read-only scope keeps the GITHUB_TOKEN at least-privilege.
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest

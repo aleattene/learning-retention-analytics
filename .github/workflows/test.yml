@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# No job writes to the repository: checkout and test runs only need read
+# access, and Codecov authenticates with its own dedicated secret. Declaring
+# this explicitly stops the GITHUB_TOKEN from inheriting broader defaults.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
