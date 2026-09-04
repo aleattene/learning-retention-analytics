@@ -3,108 +3,273 @@
 [![Test & Coverage](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/test.yml)
 [![Code Quality](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml/badge.svg)](https://github.com/aleattene/learning-retention-analytics/actions/workflows/code_quality.yml)
 [![codecov](https://codecov.io/gh/aleattene/learning-retention-analytics/graph/badge.svg?token=LS2ASS9Z6K)](https://codecov.io/gh/aleattene/learning-retention-analytics)
+[![Last Commit](https://img.shields.io/github/last-commit/aleattene/learning-retention-analytics)](https://github.com/aleattene/learning-retention-analytics/commits/main)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
+[![DuckDB](https://img.shields.io/badge/DuckDB-Analytical%20DB-yellow)](https://duckdb.org/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange)](https://jupyter.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-blue)](https://pandas.pydata.org/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-green)](https://matplotlib.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Dataset: OULAD](https://img.shields.io/badge/dataset-OULAD-orange.svg)](https://analyse.kmi.open.ac.uk/open_dataset)
 
+> 32,593 enrollments and seven online courses: where dropout concentrates and which signals announce it 
+> within the first 28 days.
+
 ---
+
+<br/>
 
 ## Overview
 
-A **product analytics case study** that analyzes student retention and
-drop-out in online education using the
+A **product analytics case study** that analyzes student retention and drop-out
+in online education, using the 
 [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset):
-32,593 enrollments by 28,785 distinct students, 7 courses, complete
-behavioral clickstream.
+- **32,593** enrollments
+- **28,785** distinct students
+- **7** courses
+- complete **behavioral** clickstream
 
-The project follows a **SQL-driven analytical pipeline**: DuckDB as a
-local-first analytical database, descriptive and inferential statistics,
-and a Looker Studio dashboard.
+The project follows a **SQL-driven** analytical pipeline:
+- **DuckDB** as local analytical database
+- descriptive and inferential **statistics**
+
+
 
 ### Why this matters
 
-Online education platforms face 40-60% drop-out rates. Understanding
-**where**, **when**, and **why** students disengage is the foundation
-for any retention strategy, whether in EdTech, SaaS subscriptions,
-or fitness app engagement.
-
-> **Dashboard**: Looker Studio *(coming soon)*
+Online education platforms record average **drop-out rates** of 40-60%.
+Understanding **where**, **when** and **why** students disengage is the foundation of any **retention
+strategy**, whether in EdTech, SaaS subscriptions or fitness apps.
 
 ---
+
+<br/>
 
 ## Business Questions
 
-| # | Question | Analytical approach |
-|---|----------|---------------------|
-| BQ1 | Where and when do students drop out? | Cohort analysis, cumulative dropout curves, cliff detection |
-| BQ2 | Which early behavioral signals predict drop-out? | Engagement segmentation (first 28 days), t-test, effect size |
-| BQ3 | Does demographics or behavior predict outcome more strongly? | Chi-square, Cramer's V, comparative analysis |
-| BQ4 | How do course characteristics affect retention? | Cross-course comparison, correlation with retention rates |
-| BQ5 | Top 3 actionable interventions for a platform operator? | Segment sizing, impact estimation, cost-benefit framing |
+**Five questions** drive the entire analysis, **from diagnosis to action**:
+
+| # | Question                                                              | Analytical approach                                                            |
+|---|-----------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| **BQ1** | Where and when do students drop out?                                  | Cohort analysis, cumulative dropout curves and cliff detection.                |
+| **BQ2** | Which early behavioral signals predict drop-out?                      | Engagement segmentation (first 28 days), t-tests and effect sizes.             |
+| **BQ3** | Does demographics or behavior predict the outcome more strongly?      | Chi-square, Cramer's V and comparative analysis.                               |
+| **BQ4** | How do course characteristics affect retention?                       | Cross-course comparison and correlation with retention rates.                  |
+| **BQ5** | Top 3 actionable interventions for a platform operator?               | Segment sizing, impact estimation and cost-benefit analysis.                   |
 
 ---
+
+<br/>
+
+## Key Findings
+
+The full analysis is available in the [Executive Report](reports/REPORT.md).
+In a nutshell:
+
+- **BQ1**: roughly **1 enrollment in 3** ends in explicit withdrawal. Dropout concentrates around assessment 
+deadlines and grade releases.
+
+
+- **BQ2**: all **8 early behavioral signals** (first 28 days) are significantly associated with dropout. 
+Engagement volume (engagement decile, active days, total clicks) dominates the effect size ranking.
+
+
+- **BQ3**: **behavior is a far stronger predictor** than demographics. Within every education level, 
+high engagement beats low engagement.
+
+
+- **BQ4**: **completion rates** range from 37% to 71% across the 7 modules. Suggestive patterns with assessment 
+density, but n = 7 prevents inferential conclusions.
+
+
+- **BQ5**: **three behavior-based interventions** (ghost activation, assessment checkpoint, week-3 
+re-engagement) cover the majority of at-risk students.
+
+---
+
+<br/>
+
+### The story in three charts: the problem, the insight and the action
+
+![Cumulative dropout curves for all course-presentations](reports/figures/03_dropout_curves_overlaid.png)
+*Where the problem lives (BQ1): withdrawal accumulates steadily, with course-specific cliffs around 
+assessment deadlines.*
+
+<br/>
+
+![Effect size comparison: demographics vs behavior](reports/figures/05_demographics_vs_behavior_comparison.png)
+*The core insight (BQ3): early behavioral signals carry far larger effect sizes than any demographic attribute.*
+
+<br/>
+
+![Priority matrix: impact vs cost](reports/figures/07_priority_matrix.png)
+*The action (BQ5): candidate interventions positioned by estimated impact and implementation cost.*
+
+---
+
+<br/>
+
+## Dashboard
+
+An interactive Looker Studio dashboard (retention rates by course, dropout curves, at-risk segments) is 
+under construction: release is planned for the last quarter of 2026 (with Milestone 03 of the
+[roadmap](#project-status)).
+
+---
+
+<br/>
+
+## Method and Limits
+
+The analysis is entirely **observational**: it measures associations, not causal relationships, and uses no 
+machine learning models (a deliberate scope choice: analytics, not data science).
+The scope does not rule out a future data science extension, which could build on the same pipeline and the 
+same data.
+
+- **Statistical rigor**: every comparison reports p-values and effect sizes (Cohen's d, Cramer's V), with 
+multiple comparison correction (Bonferroni\* and Benjamini-Hochberg\*\*) and 95% confidence intervals.
+
+
+- **Effect size before p-value**: with ~32K observations even trivial differences reach statistical 
+significance; predictors are ranked by effect size.
+
+
+- **Declared limitation**: there are only 7 courses (n = 7), so course-level comparisons (BQ4) remain 
+descriptive, with no inferential conclusions.
+
+\* **Bonferroni**: when many statistical tests run together, the probability that at least one comes out 
+"significant" by pure chance grows. The Bonferroni correction compensates by making the significance 
+threshold stricter: it divides it by the number of tests performed. More: 
+[Bonferroni correction](https://en.wikipedia.org/wiki/Bonferroni_correction) (Wikipedia).
+
+\*\* **Benjamini-Hochberg**: an alternative, less drastic correction: instead of protecting every single test, 
+it controls the expected share of false positives among the results declared significant. In this 
+project all findings stay significant under both corrections. More: 
+[False discovery rate](https://en.wikipedia.org/wiki/False_discovery_rate) (Wikipedia).
+
+The complete guide to reading the numbers (scales and worked examples) lives in the Methodology section 
+of the [Executive Report](reports/REPORT.md).
+
+---
+
+<br/>
 
 ## Methodological Transferability
 
-Every analytical pattern in this project is portable to other domains:
+Every analytical **pattern** in this project is **portable** to other domains:
 
-| Pattern | EdTech (this project) | SaaS Retention | Subscription Churn | Fitness App |
-|---------|----------------------|----------------|---------------------|-------------|
-| Cohort analysis | Enrollment cohort dropout | Trial-to-paid conversion by signup month | Renewal rate by subscription tier | 30-day retention by onboarding flow |
-| Funnel analysis | Registration -> first click -> assessment -> completion | Signup -> activation -> habit -> upgrade | Subscribe -> engage -> renew | Download -> first workout -> weekly habit |
-| Engagement segmentation | Click intensity in first 28 days | Feature adoption in first 14 days | Usage frequency before renewal window | Session frequency in first month |
-| Survival-style dropout | Cumulative withdrawal curves | Time-to-churn Kaplan-Meier | Subscription survival by plan type | Days-to-lapse by activity type |
+| Pattern | EdTech (this project) | SaaS Retention | Subscription Churn | Fitness App                                          |
+|---------|--------------------------|----------------|-------------------|------------------------------------------------------|
+| Cohort analysis | Dropout by enrollment cohort | Trial-to-paid conversion by signup month | Renewal rate by subscription tier | 30-day retention by onboarding flow                  |
+| Funnel analysis | Enrollment - first click - assessment - completion | Signup - activation - habit - upgrade | Subscribe - use - renew | Download - first workout - weekly habit              |
+| Engagement segmentation | Click intensity in first 28 days | Feature adoption in first 14 days | Usage frequency before the renewal window | Session frequency in the first month                 |
+| Survival-style analysis | Cumulative withdrawal curves | Time-to-churn Kaplan-Meier | Subscription survival by plan type | Days-to-lapse by activity type                       |
 
 ---
+
+<br/>
+
+## Analysis Notebooks
+
+The full analysis lives in **7 notebooks**: **2 exploratory**, one for each of the **5 business questions**.
+
+| #      | Notebook | Focus                                                                  |
+|--------|----------|------------------------------------------------------------------------|
+| **01** | [EDA: Student Base](notebooks/01_eda_student_base.ipynb) | Population profile, outcomes and data quality baseline.                |
+| **02** | [EDA: Engagement Patterns](notebooks/02_eda_engagement_patterns.ipynb) | Clickstream behavior, engagement typologies and ghost students.        |
+| **03** | [BQ1: Dropout Timing](notebooks/03_bq1_dropout_timing.ipynb) | Cumulative dropout curves and cliff detection.                         |
+| **04** | [BQ2: Early Signals](notebooks/04_bq2_early_signals.ipynb) | First-28-day behavioral signals and effect size ranking.               |
+| **05** | [BQ3: Demographics vs Behavior](notebooks/05_bq3_demographics_vs_behavior.ipynb) | Comparative predictive strength of the two variable families.          |
+| **06** | [BQ4: Course Comparison](notebooks/06_bq4_course_comparison.ipynb) | Course design characteristics and retention.                           |
+| **07** | [BQ5: Recommendations Synthesis](notebooks/07_bq5_recommendations_synthesis.ipynb) | Segment sizing, priority matrix and top 3 interventions.               |
+
+---
+
+<br/>
 
 ## Tech Stack
 
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
-| Analytical DB | **DuckDB** (local-first) | Zero-cost, SQL-first, BigQuery migration path |
-| SQL dialect | **ANSI SQL** only | No DuckDB-specific syntax - cloud-portable |
-| Language | **Python 3.13+** | Pipeline orchestration, statistics, visualization |
-| Statistics | **SciPy + statsmodels** | t-test, chi-square, confidence intervals, effect sizes |
-| Visualization | **Matplotlib + Seaborn** | Publication-quality charts |
-| Dashboard | **Looker Studio** | Free, shareable, Google Sheets as data source |
-| CI/CD | **GitHub Actions** | Automated testing + linting |
-| Code quality | **black + ruff + pre-commit** | Consistent formatting and linting |
+| Layer | Technology                   | Rationale                                                     |
+|---------|------------------------------|---------------------------------------------------------------|
+| Analytical DB | **DuckDB** (local-first)     | Zero cost, SQL-first and a BigQuery migration path.           |
+| SQL dialect | **ANSI SQL** only            | No DuckDB-specific syntax and cloud portability.              |
+| Language | **Python 3.13+**             | Pipeline orchestration, statistics and visualization.         |
+| Statistics | **SciPy and statsmodels**    | t-tests, chi-square, confidence intervals and effect sizes.   |
+| Visualization | **Matplotlib and Seaborn**   | Publication-quality charts.                                   |
+| Dashboard | **Looker Studio**            | Free, shareable and Google Sheets as data source.             |
+| CI/CD | **GitHub Actions**           | Automated testing and linting.                                |
+| Code quality | **black, ruff and pre-commit** | Consistent formatting and linting.                          |
 
 ---
+
+<br/>
+
+## Dataset
+
+The [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset) contains **32,593 course 
+enrollments** by **28,785 distinct students**, across **7 modules** (22 presentations) at The Open University (UK).
+
+| Table | Description                                         | Key columns |
+|---------|-----------------------------------------------------|----------------|
+| studentInfo | Demographics with final outcome                     | id_student, final_result |
+| studentRegistration | Enrollment and/or unenrollment dates                | date_registration, date_unregistration |
+| studentVle | Clickstream (daily clicks per resource)             | id_site, date, sum_click |
+| studentAssessment | Assessment scores                                   | id_assessment, score |
+| assessments | Assessment metadata                                 | assessment_type, date, weight |
+| vle | VLE (Virtual Learning Environment) resource metadata | activity_type |
+| courses | Course metadata                                     | module_presentation_length |
+
+**Target variable**: the enrollment's final outcome (`final_result`). In the original data it takes four 
+values: Pass, Distinction (pass with merit), Fail and Withdrawn (withdrew from the course). 
+For the analysis the four outcomes are grouped into two classes (outcome binarization):
+
+- **Completed**: Pass or Distinction, the course was finished successfully;
+- **Not completed**: Fail or Withdrawn, the course was not carried through, whether by failing or by dropping out.
+
+> **Citation**: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017).
+> Open University Learning Analytics dataset.
+> *Scientific Data*, 4, 170171.
+> Licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+---
+
+<br/>
 
 ## Project Structure
 
 ```
 project_root/
-├── run_pipeline.py                     # Entrypoint: orchestrates ETL
+├── run_pipeline.py                     # Entrypoint: orchestrates the ETL
 ├── src/
-│   ├── config.py                       # Paths, constants, env vars
+│   ├── config.py                       # Paths, constants, environment variables
 │   ├── db/connection.py                # DB abstraction (DuckDB now, BigQuery later)
 │   ├── pipeline/
-│   │   ├── step_01_ingest.py           # CSV OULAD → raw DuckDB tables
-│   │   ├── step_02_transform.py        # Raw tables → analytical views
-│   │   ├── step_03_export.py           # Views → CSV + optional Sheets push
-│   │   └── step_04_stats.py            # BQ2/BQ3 statistical tests → CSV
+│   │   ├── step_01_ingest.py           # OULAD CSVs: raw DuckDB tables
+│   │   ├── step_02_transform.py        # Raw tables: analytical views
+│   │   ├── step_03_export.py           # Views: CSVs with optional Sheets push
+│   │   └── step_04_stats.py            # BQ2/BQ3 statistical tests: CSVs
 │   ├── stats/tests.py                  # Statistical test wrappers
 │   ├── sheets/push.py                  # Google Sheets integration
 │   └── utils/                          # Logging, runtime utilities
 ├── sql/
-│   ├── schema.sql                      # DDL for 7 raw OULAD tables
+│   ├── schema.sql                      # DDL for the 7 raw OULAD tables
 │   ├── views/                          # 5 analytical views
 │   └── queries/                        # 5 business question queries
-├── notebooks/                          # 7 analysis notebooks (EDA + BQ1-BQ5)
+├── notebooks/                          # 7 analysis notebooks (EDA and BQ1-BQ5)
 ├── reports/
 │   ├── REPORT.md                       # Executive report (IT mirror in reports/it/)
 │   └── figures/                        # Charts exported by the notebooks
 ├── data_sample/                        # Synthetic data (~200 students) for CI
 ├── it/                                 # Italian mirror of this README
-├── tests/                              # pytest suite (unit + integration + stress)
-└── .github/workflows/                  # test.yml + code_quality.yml
+├── tests/                              # pytest suite (unit, integration and stress)
+└── .github/workflows/                  # test.yml and code_quality.yml
 ```
 
 ---
 
-## Quick Start
+<br/>
+
+## Getting Started
 
 ### Prerequisites
 
@@ -118,20 +283,27 @@ project_root/
 git clone https://github.com/aleattene/learning-retention-analytics.git
 cd learning-retention-analytics
 
-# Create and activate virtual environment
+# Create and activate the virtual environment
 python -m venv .venv
-source .venv/bin/activate
 
-# Install dependencies from pinned lockfiles
+# macOS and Linux
+source .venv/bin/activate      
+    
+# Windows: 
+.venv\Scripts\activate
+
+# Install dependencies from the pinned lockfiles
 pip install pip-tools
 pip-sync requirements-dev.txt
 
-# Install pre-commit hooks
+# Install the pre-commit hooks
 pre-commit install
+
+# To update dependencies, edit the `.in` files and re-compile with the following command
+pip-compile requirements.in && pip-compile requirements-dev.in && pip-compile requirements-test.in
 ```
 
-> **Maintainer note**: to update dependencies, edit the `.in` files and
-> re-compile: `pip-compile requirements.in && pip-compile requirements-dev.in && pip-compile requirements-test.in`
+
 
 ### Download the OULAD dataset
 
@@ -139,11 +311,12 @@ pre-commit install
 python scripts/download_oulad.py
 ```
 
-This downloads the full OULAD dataset (~450 MB) into `data/raw/`.
+This command downloads the full OULAD dataset (~450 MB) into `data/raw/`.
 
-> **Note**: the download script is not yet published *(coming soon)*. In the
-> meantime, the dataset can be downloaded manually from the official OULAD
-> page linked in the [Dataset](#dataset) section.
+> **Note**: the download script is not yet published *(coming in September 2026)*.
+> 
+> In the meantime, the dataset can be downloaded manually from the official OULAD page linked in the
+> [Dataset](#dataset) section.
 
 ### Run the pipeline
 
@@ -167,95 +340,37 @@ pytest tests/test_smoke.py -v
 
 ---
 
-## Dataset
-
-The [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset)
-contains 32,593 course enrollments by 28,785 distinct students across
-7 modules (22 presentations) at The Open University (UK).
-
-| Table | Description | Key columns |
-|-------|-------------|-------------|
-| studentInfo | Demographics + final outcome | id_student, final_result |
-| studentRegistration | Enrollment/unenrollment dates | date_registration, date_unregistration |
-| studentVle | Clickstream (daily clicks per resource) | id_site, date, sum_click |
-| studentAssessment | Assessment scores | id_assessment, score |
-| assessments | Assessment metadata | assessment_type, date, weight |
-| vle | Virtual Learning Environment (VLE) resource metadata | activity_type |
-| courses | Course metadata | module_presentation_length |
-
-**Target variable**: `final_result` ∈ {Pass, Distinction, Fail, Withdrawn},
-binarized as Completed (Pass + Distinction) vs Not completed (Fail + Withdrawn).
-
-> **Citation**: Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017).
-> Open University Learning Analytics dataset.
-> *Scientific Data*, 4, 170171.
-> Licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-
----
-
-## Analysis Notebooks
-
-The full analysis lives in 7 notebooks: two exploratory, one per
-business question.
-
-| # | Notebook | Focus |
-|---|----------|-------|
-| 01 | [EDA: Student Base](notebooks/01_eda_student_base.ipynb) | Population profile, outcomes, data quality baseline |
-| 02 | [EDA: Engagement Patterns](notebooks/02_eda_engagement_patterns.ipynb) | Clickstream behavior, engagement typologies, ghost students |
-| 03 | [BQ1: Dropout Timing](notebooks/03_bq1_dropout_timing.ipynb) | Cumulative dropout curves, cliff detection |
-| 04 | [BQ2: Early Signals](notebooks/04_bq2_early_signals.ipynb) | First-28-day behavioral signals, effect size ranking |
-| 05 | [BQ3: Demographics vs Behavior](notebooks/05_bq3_demographics_vs_behavior.ipynb) | Comparative predictive strength of the two feature families |
-| 06 | [BQ4: Course Comparison](notebooks/06_bq4_course_comparison.ipynb) | Course design features vs retention |
-| 07 | [BQ5: Recommendations Synthesis](notebooks/07_bq5_recommendations_synthesis.ipynb) | Segment sizing, priority matrix, top 3 interventions |
-
----
-
-## Key Findings
-
-The full analysis is available in the [Executive Report](reports/REPORT.md).
-In summary:
-
-- **BQ1**: roughly 1 in 3 enrollments ends in explicit withdrawal; dropout
-  clusters around assessment deadlines and grade releases
-- **BQ2**: all 8 early behavioral signals (first 28 days) are significantly
-  associated with dropout; engagement volume (engagement decile, active days,
-  total clicks) dominates the effect size ranking
-- **BQ3**: behavior predicts outcome far more strongly than demographics;
-  within every education level, high engagement beats low engagement
-- **BQ4**: completion rates range from 37% to 71% across the 7 modules;
-  suggestive patterns with assessment density, but n = 7 prevents inferential
-  conclusions
-- **BQ5**: three behavior-based interventions (ghost activation, assessment
-  checkpoint, week-3 re-engagement) cover the majority of at-risk students
-
-The story in three charts: the problem, the insight, the action.
-
-![Cumulative dropout curves for all course-presentations](reports/figures/03_dropout_curves_overlaid.png)
-*Where the problem lives (BQ1): withdrawal accumulates steadily, with
-course-specific cliffs around assessment deadlines.*
-
-![Effect size comparison: demographics vs behavior](reports/figures/05_demographics_vs_behavior_comparison.png)
-*The core insight (BQ3): early behavioral signals carry far larger effect
-sizes than any demographic attribute.*
-
-![Priority matrix: impact vs cost](reports/figures/07_priority_matrix.png)
-*The action (BQ5): candidate interventions positioned by estimated impact
-and implementation cost.*
-
----
+<br/>
 
 ## Documentation
 
-| Document | Content |
-|----------|---------|
-| [Executive Report](reports/REPORT.md) | Full BQ1–BQ5 analysis with figures and numbers |
-| [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices, trade-offs *(coming soon)* |
-| [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions, fitness *(coming soon)* |
-| [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist *(coming soon)* |
-| [ADR](docs/ADR.md) | Architectural decisions with rationale *(coming soon)* |
-| [Testing](docs/TESTING.md) | Test architecture, strategy, and decisions *(coming soon)* |
+The full extended documentation is in preparation: it will be published soon, with Milestone 02 
+of the [roadmap](#project-status).
+
+| Document | Content                                                              |
+|-----------|----------------------------------------------------------------------|
+| [Executive Report](reports/REPORT.md) | Full BQ1–BQ5 analysis with figures and numbers.                      |
+| [Methodology](docs/METHODOLOGY.md) | Statistical approach, design choices and trade-offs. *(coming soon)* |
+| [Transferability](docs/TRANSFERABILITY.md) | Pattern portability to SaaS, subscriptions and fitness. *(coming soon)* |
+| [Cloud Migration](docs/MIGRATION.md) | DuckDB to BigQuery path, gaps and checklist. *(coming soon)*         |
+| [ADR](docs/ADR.md) | Architectural decisions. *(coming soon)*                             |
+| [Testing](docs/TESTING.md) | Test architecture, strategy and decisions. *(coming soon)*           |
 
 ---
+
+<br/>
+
+## Project Status
+
+- [x] **Milestone 01**: end-to-end retention analysis (ETL pipeline, 7 analysis notebooks, inferential 
+statistics with dedicated export, EN/IT README and executive report, test suite with CI, v1.0 release)
+- [ ] **Milestone 02**: publication of the extended documentation (methodology, transferability, cloud 
+migration, architectural decisions, testing) and of the download and data generation scripts
+- [ ] **Milestone 03**: interactive Looker Studio dashboard connected to the pipeline via Google Sheets
+
+---
+
+<br/>
 
 ## Author
 
@@ -263,9 +378,10 @@ and implementation cost.*
 
 ---
 
-## License
+<br/>
 
-This project is licensed under the [MIT License](LICENSE).
+## Licenses
 
-The OULAD dataset is licensed under
-[CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/) - see citation above.
+This **project** is licensed under the [MIT License](LICENSE).
+
+The **OULAD** dataset is licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
