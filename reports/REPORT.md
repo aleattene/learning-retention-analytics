@@ -432,7 +432,7 @@ lowest cost.*
 ![Segment overlap](figures/07_segment_overlap.png)
 
 *Segment overlap analysis. Gray bars show students belonging to multiple segments.
-The ghost–non-submitter overlap is substantial.*
+The overlap between ghosts and non-submitters is substantial.*
 
 ---
 

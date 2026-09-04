@@ -424,7 +424,7 @@ minimo): segmento più grande, eccesso di non completamento più alto e costo pi
 ![Sovrapposizione dei segmenti](../figures/it/07_segment_overlap.png)
 
 *Analisi della sovrapposizione dei segmenti. Le barre grigie mostrano studenti
-appartenenti a più segmenti. La sovrapposizione ghost–non-submitter è sostanziale.*
+appartenenti a più segmenti. La sovrapposizione tra ghost e non-submitter è sostanziale.*
 
 ---
 
